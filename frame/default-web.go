@@ -4,6 +4,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -13,29 +14,35 @@ import (
 	"github.com/yamakiller/magicLibs/logger"
 )
 
-//MHttpMethod desc
-//@type (func(*gin.Context) interface{}) desc: http router method
-//type MHttpMethod func(*gin.Context)
-//type MMiddleWare func() MHttpMethod
-
-//MagicMount desc
-//@struct MagicMount desc:
-//@member (logger.Logger) log module
-//@member (*gin.Engine) http gin frame
-type MagicMount struct {
+//DefaultWeb desc
+//@struct DefaultWeb desc: Default web framework
+type DefaultWeb struct {
 	_log    logger.Logger
 	_router *gin.Engine
+	_start  func() error
+}
+
+//WithStart desc
+//@method WithStart desc: job start function to frame
+//@param (func()error)
+func (slf *DefaultWeb) WithStart(f func() error) {
+	slf._start = f
 }
 
 //RegisterGroup desc
 //@method RegisterGroup desc: Create Http Router Group
 //@return (gin.Group)
-func (slf *MagicMount) RegisterGroup(URI string, handlers ...gin.HandlerFunc) *gin.RouterGroup {
+func (slf *DefaultWeb) RegisterGroup(URI string, handlers ...gin.HandlerFunc) *gin.RouterGroup {
 	return slf._router.Group(URI, handlers...)
 }
 
 //RegisterMethod desc
-func (slf *MagicMount) RegisterMethod(g *gin.RouterGroup,
+//@method RegisterMethod desc: Register Http Router
+//@param (*gin.RouterGroup) Router group
+//@param (string) uri
+//@param (string) method [get/post/put/delete/options/head]
+//@param (...gin.HandlerFunc)
+func (slf *DefaultWeb) RegisterMethod(g *gin.RouterGroup,
 	URI string,
 	method string,
 	handler ...gin.HandlerFunc) {
@@ -87,9 +94,17 @@ func (slf *MagicMount) RegisterMethod(g *gin.RouterGroup,
 	}
 }
 
+//LoadHTMLGlob desc
+//@method LoadHTMLGlob desc: Load Html blob
+//@param (string) pattern
+func (slf *DefaultWeb) LoadHTMLGlob(pattern string) {
+	slf._router.LoadHTMLGlob(pattern)
+}
+
 //Start desc
 //@method Start desc: start system
-func (slf *MagicMount) Start() error {
+//@return (error) start fail returns error
+func (slf *DefaultWeb) Start() error {
 	logEnvPath := args.Instance().GetString("-l", "./config/log.json")
 	logDeploy := logger.NewDefault()
 
@@ -118,42 +133,52 @@ func (slf *MagicMount) Start() error {
 	logger.WithDefault(slf._log)
 	slf._log.Mount()
 
+	release := args.Instance().GetBoolean("-release", false)
+	if !release {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	//------------------------------
 	//create http router
 	slf._router = gin.Default()
-	slf._router.LoadHTMLGlob("template/*")
-	//------------------------------
-	//------------------------------
-	//register router
-	if err := slf.FillRouter(); err != nil {
-		return err
+	slf._router.Use(slf.logmap())
+	if slf._start != nil {
+		if err := slf._start(); err != nil {
+			return err
+		}
 	}
-	//signal monitoring
 	//------------------------
 	addr := args.Instance().GetString("-addr", "0.0.0.0")
 	port := args.Instance().GetInt("-port", 8080)
-	logger.Info(0, "http/%s/%d Monut", addr, port)
+	logger.Info(0, "HTTP on %s:%d", addr, port)
 	slf._router.Run(addr + ":" + strconv.Itoa(port))
 
 	return nil
 }
 
-//FillRouter desc
-//@method FillRouter desc: load http router informat
-func (slf *MagicMount) FillRouter() error {
-	return nil
+func (slf *DefaultWeb) logmap() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		startTime := time.Now()
+		c.Next()
+		endTime := time.Now()
+		latencyTime := endTime.Sub(startTime)
+		reqMethod := c.Request.Method
+		reqURI := c.Request.RequestURI
+		statusCode := c.Writer.Status()
+		clientIP := c.ClientIP()
+		slf._log.Info(0, "%s %s %3d/client:%15s/time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+	}
 }
 
 //Shutdown desc
 //@method Shutdown desc: shutdown system
-func (slf *MagicMount) Shutdown() {
+func (slf *DefaultWeb) Shutdown() {
+
 	if slf._log != nil {
 		slf._log.Close()
 		slf._log = nil
 	}
 	envs.Instance().UnLoad()
-}
-
-func (slf *MagicMount) signalWatch() {
-
 }
