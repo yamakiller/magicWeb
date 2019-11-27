@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/yamakiller/magicLibs/dbs"
@@ -16,7 +17,7 @@ var (
 //@return (*MySQLStack)
 func Instance() *MySQLStack {
 	oneSQLStack.Do(func() {
-		stack = &MySQLStack{}
+		stack = &MySQLStack{_cs: make(map[string]*dbs.MySQLDB)}
 	})
 	return stack
 }
@@ -25,27 +26,27 @@ func Instance() *MySQLStack {
 //@struct MySQLStack desc: mysql client
 //@member (*dbs.MySQLDB)
 type MySQLStack struct {
-	_c *dbs.MySQLDB
+	_cs map[string]*dbs.MySQLDB
 }
 
 //Initial desc
 //@method Initial desc: Initialization mysql pools
 //@param (*dbs.MySQLDeploy) mysql config
-func (slf *MySQLStack) Initial(d *dbs.MySQLDeploy) error {
-	slf._c = &dbs.MySQLDB{}
-	e := dbs.DoMySQLDeploy(slf._c, d)
+func (slf *MySQLStack) Initial(key string, d *dbs.MySQLDeploy) error {
+	c := &dbs.MySQLDB{}
+	e := dbs.DoMySQLDeploy(c, d)
 	if e != nil {
-		slf._c = nil
 		return e
 	}
+	slf._cs[key] = c
 	return nil
 }
 
 //IsConnected desc
 //@method IsConnected desc: is mysql connected.
 //@return (bool)
-func (slf *MySQLStack) IsConnected() bool {
-	if slf._c == nil {
+func (slf *MySQLStack) IsConnected(key string) bool {
+	if _, ok := slf._cs[key]; !ok {
 		return false
 	}
 	return true
@@ -53,46 +54,60 @@ func (slf *MySQLStack) IsConnected() bool {
 
 //Query desc
 //@method Query desc: Query sql
+//@param  (string) sql handle key
 //@param  (string) sql
 //@param  (..interface{}) sql args
 //@return (*dbs.MySQLReader)
-func (slf *MySQLStack) Query(ssql string, args ...interface{}) *dbs.MySQLReader {
-	return slf.Query(ssql, args...)
+func (slf *MySQLStack) Query(key string, ssql string, args ...interface{}) (*dbs.MySQLReader, error) {
+	if v, ok := slf._cs[key]; ok {
+		return v.Query(ssql, args...)
+	}
+
+	return nil, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
 //Insert desc
 //@method Insert desc: insert data
+//@param  (string) sql handle key
 //@param  (string) sql
 //@param  (..interface{}) sql args
 //@return (int) insert data of number
-func (slf *MySQLStack) Insert(ssql string, args ...interface{}) int {
-	n, e := slf._c.Insert(ssql, args...)
-	if e != nil {
-		return 0
-	}
+func (slf *MySQLStack) Insert(key string, ssql string, args ...interface{}) (int, error) {
+	if v, ok := slf._cs[key]; ok {
+		n, e := v.Insert(ssql, args...)
+		if e != nil {
+			return 0, e
+		}
 
-	return int(n)
+		return int(n), nil
+	}
+	return 0, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
 //Update desc
 //@method Update desc: insert data
+//@param  (string) sql handle key
 //@param  (string) sql
 //@param  (..interface{}) sql args
 //@return (int) insert data of number
-func (slf *MySQLStack) Update(ssql string, args ...interface{}) int {
-	n, e := slf._c.Update(ssql, args...)
-	if e != nil {
-		return 0
+func (slf *MySQLStack) Update(key string, ssql string, args ...interface{}) (int, error) {
+	if v, ok := slf._cs[key]; ok {
+		n, e := v.Update(ssql, args...)
+		if e != nil {
+			return 0, e
+		}
+
+		return int(n), nil
 	}
-	return int(n)
+
+	return 0, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
 //Close desc
 //@method Close desc: close mysql
 func (slf *MySQLStack) Close() {
-	if slf._c == nil {
-		return
+	for k, v := range slf._cs {
+		v.Close()
+		delete(slf._cs, k)
 	}
-	slf._c.Close()
-	slf._c = nil
 }
