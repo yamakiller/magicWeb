@@ -29,10 +29,10 @@ type MySQLStack struct {
 	_cs map[string]*dbs.MySQLDB
 }
 
-//Initial desc
-//@method Initial desc: Initialization mysql pools
+//Append desc
+//@method Append desc: Append mysql pool handle
 //@param (*dbs.MySQLDeploy) mysql config
-func (slf *MySQLStack) Initial(key string, d *dbs.MySQLDeploy) error {
+func (slf *MySQLStack) Append(key string, d *dbs.MySQLDeploy) error {
 	c := &dbs.MySQLDB{}
 	e := dbs.DoMySQLDeploy(c, d)
 	if e != nil {
