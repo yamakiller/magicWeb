@@ -3,7 +3,6 @@ package frame
 import (
 	"runtime"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,86 +18,20 @@ import (
 type DefaultWeb struct {
 	_log    logger.Logger
 	_router *gin.Engine
-	_start  func() error
+	_start  func(IMagicWeb) error
 }
 
 //WithStart desc
 //@method WithStart desc: job start function to frame
 //@param (func()error)
-func (slf *DefaultWeb) WithStart(f func() error) {
+func (slf *DefaultWeb) WithStart(f func(IMagicWeb) error) {
 	slf._start = f
 }
 
-//RegisterGroup desc
-//@method RegisterGroup desc: Create Http Router Group
-//@return (gin.Group)
-func (slf *DefaultWeb) RegisterGroup(URI string, handlers ...gin.HandlerFunc) *gin.RouterGroup {
-	return slf._router.Group(URI, handlers...)
-}
-
-//RegisterMethod desc
-//@method RegisterMethod desc: Register Http Router
-//@param (*gin.RouterGroup) Router group
-//@param (string) uri
-//@param (string) method [get/post/put/delete/options/head]
-//@param (...gin.HandlerFunc)
-func (slf *DefaultWeb) RegisterMethod(g *gin.RouterGroup,
-	URI string,
-	method string,
-	handler ...gin.HandlerFunc) {
-	switch strings.ToLower(method) {
-	default:
-		fallthrough
-	case "get":
-		if g != nil {
-			g.GET(URI, handler...)
-			return
-		}
-		slf._router.GET(URI, handler...)
-	case "post":
-		if g != nil {
-			g.POST(URI, handler...)
-			return
-		}
-		slf._router.POST(URI, handler...)
-	case "put":
-		if g != nil {
-			g.PUT(URI, handler...)
-			return
-		}
-		slf._router.PUT(URI, handler...)
-	case "delete":
-		if g != nil {
-			g.DELETE(URI, handler...)
-			return
-		}
-		slf._router.DELETE(URI, handler...)
-	case "options":
-		if g != nil {
-			g.OPTIONS(URI, handler...)
-			return
-		}
-		slf._router.OPTIONS(URI, handler...)
-	case "PATCH":
-		if g != nil {
-			g.PATCH(URI, handler...)
-			return
-		}
-		slf._router.PATCH(URI, handler...)
-	case "HEAD":
-		if g != nil {
-			g.HEAD(URI, handler...)
-			return
-		}
-		slf._router.HEAD(URI, handler...)
-	}
-}
-
-//LoadHTMLGlob desc
-//@method LoadHTMLGlob desc: Load Html blob
-//@param (string) pattern
-func (slf *DefaultWeb) LoadHTMLGlob(pattern string) {
-	slf._router.LoadHTMLGlob(pattern)
+//Engine desc
+//@method Engine desc: Returns gin engine
+func (slf *DefaultWeb) Engine() *gin.Engine {
+	return slf._router
 }
 
 //Start desc
@@ -145,7 +78,7 @@ func (slf *DefaultWeb) Start() error {
 	slf._router = gin.Default()
 	slf._router.Use(slf.logmap())
 	if slf._start != nil {
-		if err := slf._start(); err != nil {
+		if err := slf._start(slf); err != nil {
 			return err
 		}
 	}
