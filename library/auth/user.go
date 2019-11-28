@@ -9,11 +9,11 @@ const (
 	permAppend = 0x8
 )
 
-//ClaimPerm desc
-//@struct ClaimPerm desc: User Permission table
+//UserPerm desc
+//@struct UserPerm desc: User Permission table
 //@member (string) Authorized address
 //@member (int) Permission [1111]=>[append&delete&update&access]
-type ClaimPerm struct {
+type UserPerm struct {
 	URI  string `json:"uri"`
 	Perm int    `json:"permission"`
 }
@@ -21,7 +21,7 @@ type ClaimPerm struct {
 //isAccess desc
 //@method isAccess desc: Whether to grant access
 //@return (bool)
-func (slf *ClaimPerm) isAccess() bool {
+func (slf *UserPerm) isAccess() bool {
 
 	if (slf.Perm & permAccess) > 0 {
 		return true
@@ -32,7 +32,7 @@ func (slf *ClaimPerm) isAccess() bool {
 //isUpdate desc
 //@method isUpdate desc : Whether authorization can be updated
 //@return (bool)
-func (slf *ClaimPerm) isUpdate() bool {
+func (slf *UserPerm) isUpdate() bool {
 	if (slf.Perm & permUpdate) > 0 {
 		return true
 	}
@@ -42,7 +42,7 @@ func (slf *ClaimPerm) isUpdate() bool {
 //isDelete desc
 //@method isDelete desc: Whether authorization can be deleted
 //@return (bool)
-func (slf *ClaimPerm) isDelete() bool {
+func (slf *UserPerm) isDelete() bool {
 	if (slf.Perm & permDelete) > 0 {
 		return true
 	}
@@ -52,21 +52,21 @@ func (slf *ClaimPerm) isDelete() bool {
 //isAppend desc
 //@method isAppend desc: Whether authorization can be added
 //@return (bool)
-func (slf *ClaimPerm) isAppend() bool {
+func (slf *UserPerm) isAppend() bool {
 	if (slf.Perm & permAppend) > 0 {
 		return true
 	}
 	return false
 }
 
-//Claims desc
+//User desc
 //@struct User Claims: User Online data
 //@member
-type Claims struct {
-	Key       string      `json:"key"`
-	Name      string      `json:"name"`
-	LoginTime int         `json:"logintime"`
-	Perm      []ClaimPerm `json:"auth"`
+type User struct {
+	Key       string     `json:"key"`
+	Name      string     `json:"name"`
+	LoginTime int        `json:"logintime"`
+	Perm      []UserPerm `json:"auth"`
 	jwt.StandardClaims
 }
 
@@ -74,7 +74,7 @@ type Claims struct {
 //@method IsAccess desc: Whether to grant access
 //@param  (string) Inspection path
 //@return (bool)
-func (slf *Claims) IsAccess(URI string) bool {
+func (slf *User) IsAccess(URI string) bool {
 	perm := slf.getPerm(URI)
 	if perm == nil {
 		return true
@@ -87,7 +87,7 @@ func (slf *Claims) IsAccess(URI string) bool {
 //@method IsUpdate desc: Whether to grant update
 //@param  (string) Inspection path
 //@return (bool)
-func (slf *Claims) IsUpdate(URI string) bool {
+func (slf *User) IsUpdate(URI string) bool {
 	perm := slf.getPerm(URI)
 	if perm == nil {
 		return true
@@ -99,7 +99,7 @@ func (slf *Claims) IsUpdate(URI string) bool {
 //@method IsDelete desc: Whether to grant delete
 //@param  (string) Inspection path
 //@return (bool)
-func (slf *Claims) IsDelete(URI string) bool {
+func (slf *User) IsDelete(URI string) bool {
 	perm := slf.getPerm(URI)
 	if perm == nil {
 		return true
@@ -111,7 +111,7 @@ func (slf *Claims) IsDelete(URI string) bool {
 //@method IsAppend desc: Whether to grant append
 //@param  (string) Inspection path
 //@return (bool)
-func (slf *Claims) IsAppend(URI string) bool {
+func (slf *User) IsAppend(URI string) bool {
 	perm := slf.getPerm(URI)
 	if perm == nil {
 		return true
@@ -119,7 +119,7 @@ func (slf *Claims) IsAppend(URI string) bool {
 	return perm.isAppend()
 }
 
-func (slf *Claims) getPerm(URI string) *ClaimPerm {
+func (slf *User) getPerm(URI string) *UserPerm {
 	for _, v := range slf.Perm {
 		if v.URI == URI {
 			return &v
