@@ -1,10 +1,8 @@
 package auth
 
-import "github.com/gin-gonic/gin"
-
 //SignIn desc
 //@struct SignIn
-type SignIn struct {
+/*type SignIn struct {
 	_verify func(URL, v string) bool
 }
 
@@ -13,7 +11,7 @@ type SignIn struct {
 //@param (func(URL, v string) bool) with function
 func (slf *SignIn) WithVerify(f func(URL, v string) bool) {
 	slf._verify = f
-}
+}*/
 
 /*
 //WithIn desc
@@ -23,7 +21,7 @@ func (slf *SignIn) WithIn(f func(usr interface{})) {
 	slf._in = f
 }*/
 
-//Enter desc
+/*//Enter desc
 //@method Enter desc: sign in
 //@param (string)  claim key/id
 //@param (string)  claim name
@@ -43,7 +41,7 @@ func (slf *SignIn) Enter(key, name string, time, perm []ClaimPerm, expire int) (
 //@return (gin.HandlerFunc) middle function
 func (slf *SignIn) Verify(token string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		/*if cookie, err := c.Request.Cookie("signin_id"); err == nil {
+		if cookie, err := c.Request.Cookie("signin_id"); err == nil {
 				value := cookie.Value
 				if !slf._verify(c.Request.URL.String(), value) {
 					goto end_fail
@@ -56,6 +54,6 @@ func (slf *SignIn) Verify(token string) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Unauthorized",
 			})
-			c.Abort()*/
+			c.Abort()
 	}
-}
+}*/

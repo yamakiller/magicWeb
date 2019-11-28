@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,8 @@ import (
 func GenerateCaptcha(c *gin.Context) {
 	session := sessions.Default(c)
 	var id string
+
+	loc, _ := time.LoadLocation("PRC")
 
 	w := param.GetQueryInt(c, "width", 240)
 	h := param.GetQueryInt(c, "height", 60)
