@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"github.com/yamakiller/magicWeb/param"
@@ -43,11 +44,10 @@ func GenerateCaptcha(c *gin.Context) {
 
 //VerfiyCaptcha desc
 //@method VerfiyCaptcha desc: Verfiy Captchea
-//@param (*gin.Context) captcha ID
+//@param (string) captcha ID
 //@param (string) submit value
-func VerfiyCaptcha(c *gin.Context, verifyValue string) error {
-	session := sessions.Default(c)
-	verifyResult := base64Captcha.VerifyCaptcha(session.Get("captchaID"), verifyValue)
+func VerfiyCaptcha(captchaID, verifyValue string) error {
+	verifyResult := base64Captcha.VerifyCaptcha(captchaID, verifyValue)
 	if verifyResult {
 		return nil
 	}

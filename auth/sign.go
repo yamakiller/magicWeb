@@ -1,23 +1,11 @@
 package auth
 
-import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
 //SignIn desc
 //@struct SignIn
 type SignIn struct {
-	_cookie string
 	_verify func(URL, v string) bool
-}
-
-//SetCookieKey desc
-//@method SetCookieKey desc: Setting sign in cookie name
-//@param (string) cookie name
-func (slf *SignIn) SetCookieKey(name string) {
-	slf._cookie = name
 }
 
 //WithVerify desc
@@ -35,33 +23,39 @@ func (slf *SignIn) WithIn(f func(usr interface{})) {
 	slf._in = f
 }*/
 
-//In desc
-//@method In desc: sign in
-//@param (*User) sign in userinfo
-func (slf *SignIn) In(name string,
-	pwd string,
-	query func(name string) interface{},
-	save func(interface{})) {
+//Enter desc
+//@method Enter desc: sign in
+//@param (string)  claim key/id
+//@param (string)  claim name
+//@param (int)     enter time
+//@param ([]ClaimPerm) Permission array
+//@param (int)  expire time util/Minute
+func (slf *SignIn) Enter(key, name string, time, perm []ClaimPerm, expire int) (string, error) {
+	loc, _ := time.LoadLocation("PRC")
+	//expireTime := nowTime.Add(time)
+
+	return "", nil
 }
 
 //Verify desc
 //@method Verify desc: Verify sign in auth
+//@param  (string) token
 //@return (gin.HandlerFunc) middle function
-func (slf *SignIn) Verify() gin.HandlerFunc {
+func (slf *SignIn) Verify(token string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if cookie, err := c.Request.Cookie("signin_id"); err == nil {
-			value := cookie.Value
-			if !slf._verify(c.Request.URL.String(), value) {
-				goto end_fail
+		/*if cookie, err := c.Request.Cookie("signin_id"); err == nil {
+				value := cookie.Value
+				if !slf._verify(c.Request.URL.String(), value) {
+					goto end_fail
+				}
+				c.Next()
+				return
 			}
-			c.Next()
-			return
-		}
 
-	end_fail:
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-		})
-		c.Abort()
+		end_fail:
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Unauthorized",
+			})
+			c.Abort()*/
 	}
 }
