@@ -1,7 +1,5 @@
 package auth
 
-import "github.com/dgrijalva/jwt-go"
-
 const (
 	permAccess = 0x1
 	permUpdate = 0x2
@@ -67,7 +65,6 @@ type User struct {
 	Name      string     `json:"name"`
 	LoginTime int        `json:"logintime"`
 	Perm      []UserPerm `json:"auth"`
-	jwt.StandardClaims
 }
 
 //IsAccess desc
