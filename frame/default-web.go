@@ -2,7 +2,6 @@ package frame
 
 import (
 	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -83,10 +82,9 @@ func (slf *DefaultWeb) Start() error {
 		}
 	}
 	//------------------------
-	addr := args.Instance().GetString("-addr", "0.0.0.0")
-	port := args.Instance().GetInt("-port", 8080)
-	logger.Info(0, "HTTP on %s:%d", addr, port)
-	slf._router.Run(addr + ":" + strconv.Itoa(port))
+	addr := args.Instance().GetString("-p", "0.0.0.0:8081")
+	logger.Info(0, "HTTP on %s", addr)
+	slf._router.Run(addr)
 
 	return nil
 }
@@ -101,7 +99,7 @@ func (slf *DefaultWeb) logmap() gin.HandlerFunc {
 		reqURI := c.Request.RequestURI
 		statusCode := c.Writer.Status()
 		clientIP := c.ClientIP()
-		slf._log.Info(0, "%s %s %3d/client:%15s/time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+		slf._log.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
 	}
 }
 
