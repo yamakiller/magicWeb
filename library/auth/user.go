@@ -1,10 +1,11 @@
 package auth
 
 const (
-	permAccess = 0x1
-	permUpdate = 0x2
-	permDelete = 0x4
-	permAppend = 0x8
+	PermAccess = 0x1
+	PermUpdate = 0x2
+	PermDelete = 0x4
+	PermAppend = 0x8
+	PermAll    = 0xF
 )
 
 //UserPerm desc
@@ -21,7 +22,7 @@ type UserPerm struct {
 //@return (bool)
 func (slf *UserPerm) isAccess() bool {
 
-	if (slf.Perm & permAccess) > 0 {
+	if (slf.Perm & PermAccess) > 0 {
 		return true
 	}
 	return false
@@ -31,7 +32,7 @@ func (slf *UserPerm) isAccess() bool {
 //@method isUpdate desc : Whether authorization can be updated
 //@return (bool)
 func (slf *UserPerm) isUpdate() bool {
-	if (slf.Perm & permUpdate) > 0 {
+	if (slf.Perm & PermUpdate) > 0 {
 		return true
 	}
 	return false
@@ -41,7 +42,7 @@ func (slf *UserPerm) isUpdate() bool {
 //@method isDelete desc: Whether authorization can be deleted
 //@return (bool)
 func (slf *UserPerm) isDelete() bool {
-	if (slf.Perm & permDelete) > 0 {
+	if (slf.Perm & PermDelete) > 0 {
 		return true
 	}
 	return false
@@ -51,7 +52,7 @@ func (slf *UserPerm) isDelete() bool {
 //@method isAppend desc: Whether authorization can be added
 //@return (bool)
 func (slf *UserPerm) isAppend() bool {
-	if (slf.Perm & permAppend) > 0 {
+	if (slf.Perm & PermAppend) > 0 {
 		return true
 	}
 	return false
@@ -64,7 +65,7 @@ type User struct {
 	Key       string     `json:"key"`
 	Name      string     `json:"name"`
 	LoginTime int        `json:"logintime"`
-	Perm      []UserPerm `json:"auth"`
+	Perm      []UserPerm `json:"perms"`
 }
 
 //IsAccess desc

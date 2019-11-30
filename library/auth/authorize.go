@@ -6,7 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-//Enter desc
+//Enter doc
 //@method Enter desc: enter jwt system
 //@param (string) token secret
 //@param (string) user id
@@ -23,6 +23,7 @@ func Enter(secret, id, name, pwd string, expire int) (string, error) {
 		id,
 		name,
 		pwd,
+		false,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",
@@ -38,22 +39,37 @@ func Enter(secret, id, name, pwd string, expire int) (string, error) {
 	return token, err
 }
 
-//Verify desc
+//Get doc
+//@method Get desc: token to claims
+//@param (string) jwt secret
+//@param (string) jwt token
+//@return (*Claims)
+//@return (error)
+func Get(secret, token string) (*Claims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return secret, nil
+	})
+
+	if tokenClaims != nil {
+		if claims, ok := tokenClaims.Claims.(*Claims); ok {
+			claims.IsValid = tokenClaims.Valid
+			return claims, nil
+		}
+	}
+
+	return nil, err
+}
+
+//Verify doc
 //@method Verify desc: verify token and returns claims
 //@param (string) jwt secret
 //@param (string) jwt token
 //@return (*Claims)
 //@return (error)
 func Verify(secret, token string) (*Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return secret, nil
-	})
-
-	if tokenClaims != nil {
-		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
-			return claims, nil
-		}
+	tokenClaims, err := Get(secret, token)
+	if tokenClaims != nil && tokenClaims.IsValid {
+		return tokenClaims, nil
 	}
-
 	return nil, err
 }

@@ -82,7 +82,7 @@ func (slf *DefaultWeb) Start() error {
 		}
 	}
 	//------------------------
-	addr := args.Instance().GetString("-p", "0.0.0.0:8081")
+	addr := args.Instance().GetString("-p", "0.0.0.0:8080")
 	logger.Info(0, "HTTP on %s", addr)
 	slf._router.Run(addr)
 
