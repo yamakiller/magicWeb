@@ -1,8 +1,6 @@
 package captcha
 
 import (
-	"fmt"
-
 	"github.com/mojocn/base64Captcha"
 )
 
@@ -30,7 +28,7 @@ func GenerateCaptcha(w, h, m int) (string, string) {
 	captchaID, digitCap := base64Captcha.GenerateCaptcha(id, config)
 	base64Png := base64Captcha.CaptchaWriteToBase64Encoding(digitCap)
 
-	return captchaID， base64Png
+	return captchaID, base64Png
 }
 
 //VerfiyCaptcha desc
