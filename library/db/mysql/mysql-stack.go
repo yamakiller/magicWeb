@@ -9,56 +9,82 @@ import (
 
 var (
 	oneSQLStack sync.Once
-	stack       *MySQLStack
+	stack       *SQLStack
 )
 
-//Instance desc
-//@method Instance desc: mysql stack instance
-//@return (*MySQLStack)
-func Instance() *MySQLStack {
+//Instance doc
+// @Summary mysql stack instance
+// @Method Instance
+// @Return (*MySQLStack)
+func Instance() *SQLStack {
 	oneSQLStack.Do(func() {
-		stack = &MySQLStack{_cs: make(map[string]*dbs.MySQLDB)}
+		stack = &SQLStack{_cs: make(map[string]*SQLDDB)}
 	})
 	return stack
 }
 
-//MySQLStack desc
-//@struct MySQLStack desc: mysql client
-//@member (*dbs.MySQLDB)
-type MySQLStack struct {
-	_cs map[string]*dbs.MySQLDB
+// SQLDDB doc
+// @Summary mysql handle
+// @Struct MySQLms
+// @Inherit dbs.MySQLDB
+// @Member  bool  is close ?
+type SQLDDB struct {
+	dbs.MySQLDB
+	_closed bool
 }
 
-//Append desc
-//@method Append desc: Append mysql pool handle
-//@param (*dbs.MySQLDeploy) mysql config
-func (slf *MySQLStack) Append(key string, d *dbs.MySQLDeploy) error {
-	c := &dbs.MySQLDB{}
-	e := dbs.DoMySQLDeploy(c, d)
+// SQLStack doc
+// @Summary mysql client
+// @Struct MySQLStack desc
+// @Member (*dbs.MySQLDB)
+type SQLStack struct {
+	_cs map[string]*SQLDDB
+}
+
+// Append doc
+// @Summary config to Append mysql pool handle
+// @Method Append desc
+// @Param (*dbs.MySQLDeploy) mysql config
+// @Return (*dbs.MySQLDB) create mysql connection pools
+// @Return (error)
+func (slf *SQLStack) Append(key string, d *dbs.MySQLDeploy) (*SQLDDB, error) {
+	c := &SQLDDB{}
+	e := dbs.DoMySQLDeploy(&c.MySQLDB, d)
 	if e != nil {
-		return e
+		return nil, e
 	}
+	c._closed = false
 	slf._cs[key] = c
-	return nil
+	return c, nil
 }
 
-//IsConnected desc
-//@method IsConnected desc: is mysql connected.
-//@return (bool)
-func (slf *MySQLStack) IsConnected(key string) bool {
+// AppendObject doc
+// @Summary Append mysql pool handle
+// @Method Append desc
+// @Param (*dbs.MySQLDeploy) mysql config
+func (slf *SQLStack) AppendObject(key string, c *SQLDDB) {
+	slf._cs[key] = c
+}
+
+// IsConnected doc
+// @Summary is mysql connected.
+// @Method IsConnected desc
+// @Return (bool)
+func (slf *SQLStack) IsConnected(key string) bool {
 	if _, ok := slf._cs[key]; !ok {
 		return false
 	}
 	return true
 }
 
-//Query desc
-//@method Query desc: Query sql
-//@param  (string) sql handle key
-//@param  (string) sql
-//@param  (..interface{}) sql args
-//@return (*dbs.MySQLReader)
-func (slf *MySQLStack) Query(key string, ssql string, args ...interface{}) (*dbs.MySQLReader, error) {
+// Query doc
+// @Summary Query data
+// @Method Query
+// @Param  (string) sql handle key
+// @Param  (string) sql
+// @Param  (..interface{}) sql args
+// @Return (*dbs.MySQLReader)
+func (slf *SQLStack) Query(key string, ssql string, args ...interface{}) (*dbs.MySQLReader, error) {
 	if v, ok := slf._cs[key]; ok {
 		return v.Query(ssql, args...)
 	}
@@ -66,13 +92,36 @@ func (slf *MySQLStack) Query(key string, ssql string, args ...interface{}) (*dbs
 	return nil, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
-//Insert desc
-//@method Insert desc: insert data
-//@param  (string) sql handle key
-//@param  (string) sql
-//@param  (..interface{}) sql args
-//@return (int) insert data of number
-func (slf *MySQLStack) Insert(key string, ssql string, args ...interface{}) (int, error) {
+// QueryPage doc
+// @Summary Query page data
+// @method  Query
+// @Param   (string) sql handle key
+// @Param   (string) table files (xxx,xxx)
+// @Param   (string) table names (xxx,xxx)
+// @Param   (string) query condition
+// @Param   (string) query order mode
+// @Param   (int) page
+// @Param   (int) pageSize
+// @Return  (int) pageCount
+// @Param   (...interface{}) where args
+// @Return  (*dbs.MySQLReader) reader
+// @Return  (error) ree
+func (slf *SQLStack) QueryPage(key, fileds, tables, where, order string, page, pageSize int, args ...interface{}) (pageCount int, reader *dbs.MySQLReader, err error) {
+	if v, ok := slf._cs[key]; ok {
+		return v.QueryPage(fileds, tables, where, order, page, pageSize, args...)
+	}
+
+	return 0, nil, fmt.Errorf("Non-existent %s MySQL Connect", key)
+}
+
+//Insert doc
+// @Summary insert data
+// @Method Insert
+// @Param  (string) sql handle key
+// @Param  (string) sql
+// @Param  (..interface{}) sql args
+// @Return (int) insert data of number
+func (slf *SQLStack) Insert(key string, ssql string, args ...interface{}) (int, error) {
 	if v, ok := slf._cs[key]; ok {
 		n, e := v.Insert(ssql, args...)
 		if e != nil {
@@ -84,13 +133,14 @@ func (slf *MySQLStack) Insert(key string, ssql string, args ...interface{}) (int
 	return 0, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
-//Update desc
-//@method Update desc: insert data
-//@param  (string) sql handle key
-//@param  (string) sql
-//@param  (..interface{}) sql args
-//@return (int) insert data of number
-func (slf *MySQLStack) Update(key string, ssql string, args ...interface{}) (int, error) {
+// Update doc
+// @Summary insert data
+// @Method Update desc
+// @Param  (string) sql handle key
+// @Param  (string) sql
+// @Param  (..interface{}) sql args
+// @Return (int) insert data of number
+func (slf *SQLStack) Update(key string, ssql string, args ...interface{}) (int, error) {
 	if v, ok := slf._cs[key]; ok {
 		n, e := v.Update(ssql, args...)
 		if e != nil {
@@ -103,11 +153,15 @@ func (slf *MySQLStack) Update(key string, ssql string, args ...interface{}) (int
 	return 0, fmt.Errorf("Non-existent %s MySQL Connect", key)
 }
 
-//Close desc
-//@method Close desc: close mysql
-func (slf *MySQLStack) Close() {
+// Close doc
+// @Summary close mysql
+// @Method Close desc
+func (slf *SQLStack) Close() {
 	for k, v := range slf._cs {
-		v.Close()
+		if !v._closed {
+			v.Close()
+			v._closed = true
+		}
 		delete(slf._cs, k)
 	}
 }
