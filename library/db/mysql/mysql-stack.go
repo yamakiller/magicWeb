@@ -35,7 +35,7 @@ type SQLDDB struct {
 
 // SQLStack doc
 // @Summary mysql client
-// @Struct MySQLStack desc
+// @Struct MySQLStack doc
 // @Member (*dbs.MySQLDB)
 type SQLStack struct {
 	_cs map[string]*SQLDDB
@@ -43,7 +43,7 @@ type SQLStack struct {
 
 // Append doc
 // @Summary config to Append mysql pool handle
-// @Method Append desc
+// @Method Append doc
 // @Param (*dbs.MySQLDeploy) mysql config
 // @Return (*dbs.MySQLDB) create mysql connection pools
 // @Return (error)
@@ -60,7 +60,7 @@ func (slf *SQLStack) Append(key string, d *dbs.MySQLDeploy) (*SQLDDB, error) {
 
 // AppendObject doc
 // @Summary Append mysql pool handle
-// @Method Append desc
+// @Method Append doc
 // @Param (*dbs.MySQLDeploy) mysql config
 func (slf *SQLStack) AppendObject(key string, c *SQLDDB) {
 	slf._cs[key] = c
@@ -68,7 +68,7 @@ func (slf *SQLStack) AppendObject(key string, c *SQLDDB) {
 
 // IsConnected doc
 // @Summary is mysql connected.
-// @Method IsConnected desc
+// @Method IsConnected doc
 // @Return (bool)
 func (slf *SQLStack) IsConnected(key string) bool {
 	if _, ok := slf._cs[key]; !ok {
@@ -135,7 +135,7 @@ func (slf *SQLStack) Insert(key string, ssql string, args ...interface{}) (int, 
 
 // Update doc
 // @Summary insert data
-// @Method Update desc
+// @Method Update doc
 // @Param  (string) sql handle key
 // @Param  (string) sql
 // @Param  (..interface{}) sql args
@@ -155,7 +155,7 @@ func (slf *SQLStack) Update(key string, ssql string, args ...interface{}) (int, 
 
 // Close doc
 // @Summary close mysql
-// @Method Close desc
+// @Method Close doc
 func (slf *SQLStack) Close() {
 	for k, v := range slf._cs {
 		if !v._closed {

@@ -7,7 +7,7 @@ import (
 )
 
 //Enter doc
-//@Method Enter desc: enter jwt system
+//@Method Enter @Summary enter jwt system
 //@Param (string) token secret
 //@Param (string) user id
 //@Param (string) user name
@@ -40,7 +40,7 @@ func Enter(secret, id, name, pwd string, expire int) (string, error) {
 }
 
 //Get doc
-//@Method Get desc: token to claims
+//@Method Get @Summary token to claims
 //@Param (string) jwt secret
 //@Param (string) jwt token
 //@Return (*Claims)
@@ -61,7 +61,7 @@ func Get(secret, token string) (*Claims, error) {
 }
 
 //Verify doc
-//@Method Verify desc: verify token and returns claims
+//@Method Verify @Summary verify token and returns claims
 //@Param (string) jwt secret
 //@Param (string) jwt token
 //@Return (*Claims)

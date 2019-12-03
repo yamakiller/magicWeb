@@ -8,8 +8,8 @@ const (
 	PermAll    = 0xF
 )
 
-//UserPerm desc
-//@Struct UserPerm desc: User Permission table
+//UserPerm doc
+//@Struct UserPerm @Summary User Permission table
 //@Member (string) Authorized address
 //@Member (int) Permission [1111]=>[append&delete&update&access]
 type UserPerm struct {
@@ -17,8 +17,8 @@ type UserPerm struct {
 	Perm int    `json:"permission"`
 }
 
-//isAccess desc
-//@Method isAccess desc: Whether to grant access
+//isAccess doc
+//@Method isAccess @Summary Whether to grant access
 //@Return (bool)
 func (slf *UserPerm) isAccess() bool {
 
@@ -28,8 +28,8 @@ func (slf *UserPerm) isAccess() bool {
 	return false
 }
 
-//isUpdate desc
-//@Method isUpdate desc : Whether authorization can be updated
+//isUpdate doc
+//@Method isUpdate doc : Whether authorization can be updated
 //@Return (bool)
 func (slf *UserPerm) isUpdate() bool {
 	if (slf.Perm & PermUpdate) > 0 {
@@ -38,8 +38,8 @@ func (slf *UserPerm) isUpdate() bool {
 	return false
 }
 
-//isDelete desc
-//@Method isDelete desc: Whether authorization can be deleted
+//isDelete doc
+//@Method isDelete @Summary Whether authorization can be deleted
 //@Return (bool)
 func (slf *UserPerm) isDelete() bool {
 	if (slf.Perm & PermDelete) > 0 {
@@ -48,8 +48,8 @@ func (slf *UserPerm) isDelete() bool {
 	return false
 }
 
-//isAppend desc
-//@Method isAppend desc: Whether authorization can be added
+//isAppend doc
+//@Method isAppend @Summary Whether authorization can be added
 //@Return (bool)
 func (slf *UserPerm) isAppend() bool {
 	if (slf.Perm & PermAppend) > 0 {
@@ -58,7 +58,7 @@ func (slf *UserPerm) isAppend() bool {
 	return false
 }
 
-//User desc
+//User doc
 //@Struct User Claims: User Online data
 //@Member
 type User struct {
@@ -68,8 +68,8 @@ type User struct {
 	Perm      []UserPerm `json:"perms"`
 }
 
-//IsAccess desc
-//@Method IsAccess desc: Whether to grant access
+//IsAccess doc
+//@Method IsAccess @Summary Whether to grant access
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsAccess(URI string) bool {
@@ -81,8 +81,8 @@ func (slf *User) IsAccess(URI string) bool {
 	return perm.isAccess()
 }
 
-//IsUpdate desc
-//@Method IsUpdate desc: Whether to grant update
+//IsUpdate doc
+//@Method IsUpdate @Summary Whether to grant update
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsUpdate(URI string) bool {
@@ -93,8 +93,8 @@ func (slf *User) IsUpdate(URI string) bool {
 	return perm.isUpdate()
 }
 
-//IsDelete desc
-//@Method IsDelete desc: Whether to grant delete
+//IsDelete doc
+//@Method IsDelete @Summary Whether to grant delete
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsDelete(URI string) bool {
@@ -105,8 +105,8 @@ func (slf *User) IsDelete(URI string) bool {
 	return perm.isDelete()
 }
 
-//IsAppend desc
-//@Method IsAppend desc: Whether to grant append
+//IsAppend doc
+//@Method IsAppend @Summary Whether to grant append
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsAppend(URI string) bool {

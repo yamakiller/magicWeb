@@ -12,8 +12,8 @@ var (
 	stack    *RedisStack
 )
 
-//Instance desc
-//@Method Instance desc: Reids instance
+//Instance doc
+//@Method Instance @Summary Reids instance
 //@Return (*RedisStack)
 func Instance() *RedisStack {
 	oneRedis.Do(func() {
@@ -22,15 +22,15 @@ func Instance() *RedisStack {
 	return stack
 }
 
-//RedisStack desc
-//@Struct RedisStack desc: redis client
+//RedisStack doc
+//@Struct RedisStack @Summary redis client
 //@Member (*dbs.RedisDB)
 type RedisStack struct {
 	_cs map[int]*dbs.RedisDB
 }
 
-//Append desc
-//@Method Append desc: Append redis pools
+//Append doc
+//@Method Append @Summary Append redis pools
 //@Param (*dbs.RedisDeppoy) redis config
 func (slf *RedisStack) Append(d *dbs.RedisDeploy) error {
 	if _, ok := slf._cs[d.DB]; ok {
@@ -47,8 +47,8 @@ func (slf *RedisStack) Append(d *dbs.RedisDeploy) error {
 	return nil
 }
 
-//IsConnected desc
-//@Method IsConnected desc: redis is connected
+//IsConnected doc
+//@Method IsConnected @Summary redis is connected
 //@Param (int) db
 func (slf *RedisStack) IsConnected(db int) bool {
 	if _, ok := slf._cs[db]; !ok {
@@ -57,8 +57,8 @@ func (slf *RedisStack) IsConnected(db int) bool {
 	return true
 }
 
-//Do desc
-//@Method Do desc: execute redis command
+//Do doc
+//@Method Do @Summary execute redis command
 //@Param (int)    db
 //@Param (string) command name
 //@Param (...interface{}) command params
@@ -74,8 +74,8 @@ func (slf *RedisStack) Do(db int, commandName string, args ...interface{}) (inte
 	return c.Do(commandName, args...)
 }
 
-//Close desc
-//@Method Close desc: close redis db operation
+//Close doc
+//@Method Close @Summary close redis db operation
 func (slf *RedisStack) Close() {
 	for k, v := range slf._cs {
 		v.Close()

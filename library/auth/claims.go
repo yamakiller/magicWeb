@@ -2,8 +2,8 @@ package auth
 
 import "github.com/dgrijalva/jwt-go"
 
-//Claims desc
-//@Struct Claims desc: jwt data
+//Claims doc
+//@Struct Claims @Summary jwt data
 type Claims struct {
 	Userid   string `json:"userid"`
 	Username string `json:"username"`

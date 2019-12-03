@@ -12,29 +12,29 @@ import (
 	"github.com/yamakiller/magicLibs/logger"
 )
 
-//DefaultWeb desc
-//@Struct DefaultWeb desc: Default web framework
+//DefaultWeb doc
+//@Struct DefaultWeb @Summary Default web framework
 type DefaultWeb struct {
 	_log    logger.Logger
 	_router *gin.Engine
 	_start  func(IMagicWeb) error
 }
 
-//WithStart desc
-//@Method WithStart desc: job start function to frame
+//WithStart doc
+//@Method WithStart @Summary job start function to frame
 //@Param (func()error)
 func (slf *DefaultWeb) WithStart(f func(IMagicWeb) error) {
 	slf._start = f
 }
 
-//Engine desc
-//@Method Engine desc: Returns gin engine
+//Engine doc
+//@Method Engine @Summary Returns gin engine
 func (slf *DefaultWeb) Engine() *gin.Engine {
 	return slf._router
 }
 
-//Start desc
-//@Method Start desc: start system
+//Start doc
+//@Method Start @Summary start system
 //@Return (error) start fail returns error
 func (slf *DefaultWeb) Start() error {
 	logEnvPath := args.Instance().GetString("-l", "./config/log.json")
@@ -103,8 +103,8 @@ func (slf *DefaultWeb) logmap() gin.HandlerFunc {
 	}
 }
 
-//Shutdown desc
-//@Method Shutdown desc: shutdown system
+//Shutdown doc
+//@Method Shutdown @Summary shutdown system
 func (slf *DefaultWeb) Shutdown() {
 
 	if slf._log != nil {

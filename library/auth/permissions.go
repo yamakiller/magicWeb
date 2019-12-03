@@ -3,7 +3,7 @@ package auth
 import "strings"
 
 //VerifyPerm doc
-//method VerifyPerm desc: Verify permissions
+//method VerifyPerm @Summary Verify permissions
 //param ([]UserPerm) permissions array
 //param (string)     access uri
 //param (int)        need permissions

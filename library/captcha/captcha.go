@@ -4,8 +4,8 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
-//GenerateCaptcha desc
-//@Method GenerateCaptcha desc: Generate Image Captcha
+//GenerateCaptcha doc
+//@Method GenerateCaptcha @Summary Generate Image Captcha
 //@Param (*gin.Context)
 func GenerateCaptcha(w, h, m int) (string, string) {
 	var id string
@@ -31,8 +31,8 @@ func GenerateCaptcha(w, h, m int) (string, string) {
 	return captchaID, base64Png
 }
 
-//VerfiyCaptcha desc
-//@Method VerfiyCaptcha desc: Verfiy Captchea
+//VerfiyCaptcha doc
+//@Method VerfiyCaptcha @Summary Verfiy Captchea
 //@Param (string) captcha ID
 //@Param (string) submit value
 func VerfiyCaptcha(captchaID, verifyValue string) bool {

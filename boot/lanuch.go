@@ -6,8 +6,8 @@ import (
 	"github.com/yamakiller/magicWeb/frame"
 )
 
-//Lanuch desc
-//@Method Lanuch desc: lanuch web system
+//Lanuch doc
+//@Method Lanuch @Summary lanuch web system
 //@Param (frame.Spawn) Spawn framework function
 func Lanuch(spawn frame.Spawn) {
 	frm := spawn()
