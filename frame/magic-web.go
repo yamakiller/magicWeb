@@ -7,7 +7,7 @@ import "github.com/gin-gonic/gin"
 type Spawn func() IMagicWeb
 
 //IMagicWeb desc
-//@method IMagicWeb desc: eb system main frame
+//@Method IMagicWeb desc: eb system main frame
 type IMagicWeb interface {
 	Start() error
 	Shutdown()

@@ -7,14 +7,14 @@ import (
 )
 
 //Enter doc
-//@method Enter desc: enter jwt system
-//@param (string) token secret
-//@param (string) user id
-//@param (string) user name
-//@param (string) user password
-//@param (int)    token expire time unit/minute
-//@return (string) token
-//@return (error)
+//@Method Enter desc: enter jwt system
+//@Param (string) token secret
+//@Param (string) user id
+//@Param (string) user name
+//@Param (string) user password
+//@Param (int)    token expire time unit/minute
+//@Return (string) token
+//@Return (error)
 func Enter(secret, id, name, pwd string, expire int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(expire) * time.Minute)
@@ -40,11 +40,11 @@ func Enter(secret, id, name, pwd string, expire int) (string, error) {
 }
 
 //Get doc
-//@method Get desc: token to claims
-//@param (string) jwt secret
-//@param (string) jwt token
-//@return (*Claims)
-//@return (error)
+//@Method Get desc: token to claims
+//@Param (string) jwt secret
+//@Param (string) jwt token
+//@Return (*Claims)
+//@Return (error)
 func Get(secret, token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return secret, nil
@@ -61,11 +61,11 @@ func Get(secret, token string) (*Claims, error) {
 }
 
 //Verify doc
-//@method Verify desc: verify token and returns claims
-//@param (string) jwt secret
-//@param (string) jwt token
-//@return (*Claims)
-//@return (error)
+//@Method Verify desc: verify token and returns claims
+//@Param (string) jwt secret
+//@Param (string) jwt token
+//@Return (*Claims)
+//@Return (error)
 func Verify(secret, token string) (*Claims, error) {
 	tokenClaims, err := Get(secret, token)
 	if tokenClaims != nil && tokenClaims.IsValid {

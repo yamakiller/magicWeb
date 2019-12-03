@@ -7,8 +7,8 @@ import (
 )
 
 //Lanuch desc
-//@method Lanuch desc: lanuch web system
-//@param (frame.Spawn) Spawn framework function
+//@Method Lanuch desc: lanuch web system
+//@Param (frame.Spawn) Spawn framework function
 func Lanuch(spawn frame.Spawn) {
 	frm := spawn()
 	var err error

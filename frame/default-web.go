@@ -13,7 +13,7 @@ import (
 )
 
 //DefaultWeb desc
-//@struct DefaultWeb desc: Default web framework
+//@Struct DefaultWeb desc: Default web framework
 type DefaultWeb struct {
 	_log    logger.Logger
 	_router *gin.Engine
@@ -21,21 +21,21 @@ type DefaultWeb struct {
 }
 
 //WithStart desc
-//@method WithStart desc: job start function to frame
-//@param (func()error)
+//@Method WithStart desc: job start function to frame
+//@Param (func()error)
 func (slf *DefaultWeb) WithStart(f func(IMagicWeb) error) {
 	slf._start = f
 }
 
 //Engine desc
-//@method Engine desc: Returns gin engine
+//@Method Engine desc: Returns gin engine
 func (slf *DefaultWeb) Engine() *gin.Engine {
 	return slf._router
 }
 
 //Start desc
-//@method Start desc: start system
-//@return (error) start fail returns error
+//@Method Start desc: start system
+//@Return (error) start fail returns error
 func (slf *DefaultWeb) Start() error {
 	logEnvPath := args.Instance().GetString("-l", "./config/log.json")
 	logDeploy := logger.NewDefault()
@@ -104,7 +104,7 @@ func (slf *DefaultWeb) logmap() gin.HandlerFunc {
 }
 
 //Shutdown desc
-//@method Shutdown desc: shutdown system
+//@Method Shutdown desc: shutdown system
 func (slf *DefaultWeb) Shutdown() {
 
 	if slf._log != nil {

@@ -5,8 +5,8 @@ import (
 )
 
 //GenerateCaptcha desc
-//@method GenerateCaptcha desc: Generate Image Captcha
-//@param (*gin.Context)
+//@Method GenerateCaptcha desc: Generate Image Captcha
+//@Param (*gin.Context)
 func GenerateCaptcha(w, h, m int) (string, string) {
 	var id string
 
@@ -32,9 +32,9 @@ func GenerateCaptcha(w, h, m int) (string, string) {
 }
 
 //VerfiyCaptcha desc
-//@method VerfiyCaptcha desc: Verfiy Captchea
-//@param (string) captcha ID
-//@param (string) submit value
+//@Method VerfiyCaptcha desc: Verfiy Captchea
+//@Param (string) captcha ID
+//@Param (string) submit value
 func VerfiyCaptcha(captchaID, verifyValue string) bool {
 	verifyResult := base64Captcha.VerifyCaptcha(captchaID, verifyValue)
 	if verifyResult {

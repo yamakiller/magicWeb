@@ -10,7 +10,6 @@ git clone https://github.com/swaggo/gin-swagger %GOPATH%\src\github.com\swaggo\g
 git clone https://github.com/swaggo/swag  %GOPATH%\src\github.com\swaggo\swag
 git clone https://github.com/mojocn/base64Captcha %GOPATH%\src\github.com\mojocn\base64Captcha
 git clone -b v8 https://github.com/go-playground/validator.git %GOPATH%\src\gopkg.in\go-playground\validator.v8
-git clone -b v2 https:/github.com/go-yaml/yaml %GOPATH%\src\gopkg.in\yaml.v2
 git clone -b v1 https://github.com/go-sourcemap/sourcemap %GOPATH%\src\gopkg.in\sourcemap.v1
 
 cd %GOPATH%\src 

@@ -94,7 +94,7 @@ func (slf *SQLStack) Query(key string, ssql string, args ...interface{}) (*dbs.M
 
 // QueryPage doc
 // @Summary Query page data
-// @method  Query
+// @Method  Query
 // @Param   (string) sql handle key
 // @Param   (string) table files (xxx,xxx)
 // @Param   (string) table names (xxx,xxx)
