@@ -1,11 +1,16 @@
 package auth
 
 const (
+	//PermAccess access
 	PermAccess = 0x1
+	//PermUpdate update
 	PermUpdate = 0x2
+	//PermDelete delete
 	PermDelete = 0x4
+	//PermAppend delete
 	PermAppend = 0x8
-	PermAll    = 0xF
+	//PermAll    all
+	PermAll = 0xF
 )
 
 //UserPerm doc
@@ -13,8 +18,8 @@ const (
 //@Member (string) Authorized address
 //@Member (int) Permission [1111]=>[append&delete&update&access]
 type UserPerm struct {
-	URI  string `json:"uri"`
-	Perm int    `json:"permission"`
+	URI  string `xml:"uri" yaml:"uri" json:"uri"`
+	Perm int    `xml:"permission" yaml:"permission" json:"permission"`
 }
 
 //isAccess doc
@@ -62,10 +67,10 @@ func (slf *UserPerm) isAppend() bool {
 //@Struct User Claims: User Online data
 //@Member
 type User struct {
-	Key       string     `json:"key"`
-	Name      string     `json:"name"`
-	LoginTime int        `json:"logintime"`
-	Perm      []UserPerm `json:"perms"`
+	Key       string     `xml:"key" yaml:"key" json:"key"`
+	Name      string     `xml:"name" yaml:"name" json:"name"`
+	LoginTime int        `xml:"logintime" yaml:"logintime" json:"logintime"`
+	Perm      []UserPerm `xml:"perms" yaml:"perms" json:"perms"`
 }
 
 //IsAccess doc
