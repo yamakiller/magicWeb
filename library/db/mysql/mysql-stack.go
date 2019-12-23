@@ -1,8 +1,9 @@
 package mysql
 
 import (
-	"fmt"
 	"sync"
+
+	"github.com/jinzhu/gorm"
 
 	"github.com/yamakiller/magicLibs/dbs"
 )
@@ -29,7 +30,7 @@ func Instance() *SQLStack {
 // @Inherit dbs.MySQLDB
 // @Member  bool  is close ?
 type SQLDDB struct {
-	dbs.MySQLDB
+	dbs.MySQLGORM
 	_closed bool
 }
 
@@ -41,15 +42,22 @@ type SQLStack struct {
 	_cs map[string]*SQLDDB
 }
 
+//DB Return grom db object
+func (slf *SQLStack) DB(key string) *gorm.DB {
+	if v, ok := slf._cs[key]; ok {
+		return v.DB()
+	}
+	return nil
+}
+
 // Append doc
 // @Summary config to Append mysql pool handle
-// @Method Append doc
 // @Param (*dbs.MySQLDeploy) mysql config
 // @Return (*dbs.MySQLDB) create mysql connection pools
 // @Return (error)
 func (slf *SQLStack) Append(key string, d *dbs.MySQLDeploy) (*SQLDDB, error) {
 	c := &SQLDDB{}
-	e := dbs.DoMySQLDeploy(&c.MySQLDB, d)
+	e := dbs.DoMySQLGormDeploy(&c.MySQLGORM, d)
 	if e != nil {
 		return nil, e
 	}
@@ -77,6 +85,20 @@ func (slf *SQLStack) IsConnected(key string) bool {
 	return true
 }
 
+// Close doc
+// @Summary close mysql
+// @Method Close doc
+func (slf *SQLStack) Close() {
+	for k, v := range slf._cs {
+		if !v._closed {
+			v.Close()
+			v._closed = true
+		}
+		delete(slf._cs, k)
+	}
+}
+
+/*
 // Query doc
 // @Summary Query data
 // @Method Query
@@ -165,3 +187,4 @@ func (slf *SQLStack) Close() {
 		delete(slf._cs, k)
 	}
 }
+*/
