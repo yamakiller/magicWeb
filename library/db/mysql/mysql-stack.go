@@ -55,7 +55,7 @@ func (slf *SQLStack) DB(key string) *gorm.DB {
 // @Param (*dbs.MySQLDeploy) mysql config
 // @Return (*dbs.MySQLDB) create mysql connection pools
 // @Return (error)
-func (slf *SQLStack) Append(key string, d *dbs.MySQLDeploy) (*SQLDDB, error) {
+func (slf *SQLStack) Append(key string, d *dbs.MySQLGormDeploy) (*SQLDDB, error) {
 	c := &SQLDDB{}
 	e := dbs.DoMySQLGormDeploy(&c.MySQLGORM, d)
 	if e != nil {

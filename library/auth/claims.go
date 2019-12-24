@@ -5,8 +5,8 @@ import "github.com/dgrijalva/jwt-go"
 //Claims doc
 //@Struct Claims @Summary jwt data
 type Claims struct {
-	Userid   string `json:"userid"`
-	Username string `json:"username"`
+	ID       string `json:"id"`
+	Account  string `json:"account"`
 	Password string `json:"password"`
 	IsValid  bool   `json:"valid"`
 	jwt.StandardClaims

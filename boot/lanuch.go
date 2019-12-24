@@ -7,7 +7,7 @@ import (
 )
 
 //Lanuch doc
-//@Method Lanuch @Summary lanuch web system
+//@Summary lanuch web system
 //@Param (frame.Spawn) Spawn framework function
 func Lanuch(spawn frame.Spawn) {
 	frm := spawn()

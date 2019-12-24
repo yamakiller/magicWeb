@@ -1,43 +1,41 @@
 package auth
 
 const (
-	//PermAccess access
-	PermAccess = 0x1
-	//PermUpdate update
-	PermUpdate = 0x2
-	//PermDelete delete
-	PermDelete = 0x4
-	//PermAppend delete
-	PermAppend = 0x8
-	//PermAll    all
-	PermAll = 0xF
+	//ProfileAccess access
+	ProfileAccess = 0x1
+	//ProfileUpdate update
+	ProfileUpdate = 0x2
+	//ProfileDelete delete
+	ProfileDelete = 0x4
+	//ProfileAppend delete
+	ProfileAppend = 0x8
+	//ProfileAll    all
+	ProfileAll = 0xF
 )
 
-//ConfigUserPerm doc
+//ConfigUserProfile doc
 //@Summary user Permission config
-//@Struct ConfigUserPerm
 //@Member []UserPerm Arrays
-type ConfigUserPerm struct {
-	Data []UserPerm `xml:"config" yaml:"config" json:"config"`
+type ConfigUserProfile struct {
+	Items []UserProfile `xml:"items" yaml:"items" json:"items"`
 }
 
-//UserPerm doc
+//UserProfile doc
 //@Summary User Permission table
-//@Struct UserPerm
 //@Member (string) Authorized address
 //@Member (int) Permission [1111]=>[append&delete&update&access]
-type UserPerm struct {
+type UserProfile struct {
 	URI  string `xml:"uri" yaml:"uri" json:"uri"`
-	Perm int    `xml:"permission" yaml:"permission" json:"permission"`
+	Auth int    `xml:"auth" yaml:"auth" json:"auth"`
 }
 
 //isAccess doc
 //@Summary Whether to grant access
 //@Method isAccess
 //@Return (bool)
-func (slf *UserPerm) isAccess() bool {
+func (slf *UserProfile) isAccess() bool {
 
-	if (slf.Perm & PermAccess) > 0 {
+	if (slf.Auth & ProfileAccess) > 0 {
 		return true
 	}
 	return false
@@ -47,8 +45,8 @@ func (slf *UserPerm) isAccess() bool {
 //@Whether authorization can be updated
 //@Method isUpdate
 //@Return (bool)
-func (slf *UserPerm) isUpdate() bool {
-	if (slf.Perm & PermUpdate) > 0 {
+func (slf *UserProfile) isUpdate() bool {
+	if (slf.Auth & ProfileUpdate) > 0 {
 		return true
 	}
 	return false
@@ -58,8 +56,8 @@ func (slf *UserPerm) isUpdate() bool {
 //@Summary Whether authorization can be deleted
 //@Method isDelete
 //@Return (bool)
-func (slf *UserPerm) isDelete() bool {
-	if (slf.Perm & PermDelete) > 0 {
+func (slf *UserProfile) isDelete() bool {
+	if (slf.Auth & ProfileDelete) > 0 {
 		return true
 	}
 	return false
@@ -69,8 +67,8 @@ func (slf *UserPerm) isDelete() bool {
 //@Summary Whether authorization can be added
 //@Method isAppend
 //@Return (bool)
-func (slf *UserPerm) isAppend() bool {
-	if (slf.Perm & PermAppend) > 0 {
+func (slf *UserProfile) isAppend() bool {
+	if (slf.Auth & ProfileAppend) > 0 {
 		return true
 	}
 	return false
@@ -81,10 +79,10 @@ func (slf *UserPerm) isAppend() bool {
 //@Struct User Claims
 //@Member
 type User struct {
-	Key       string     `xml:"key" yaml:"key" json:"key"`
-	Name      string     `xml:"name" yaml:"name" json:"name"`
-	LoginTime int        `xml:"logintime" yaml:"logintime" json:"logintime"`
-	Perm      []UserPerm `xml:"perms" yaml:"perms" json:"perms"`
+	Key       string        `xml:"key" yaml:"key" json:"key"`
+	Name      string        `xml:"name" yaml:"name" json:"name"`
+	LoginTime int           `xml:"logintime" yaml:"logintime" json:"logintime"`
+	Profile   []UserProfile `xml:"profiles" yaml:"profiles" json:"profiles"`
 }
 
 //IsAccess doc
@@ -93,7 +91,7 @@ type User struct {
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsAccess(URI string) bool {
-	perm := slf.getPerm(URI)
+	perm := slf.getProfile(URI)
 	if perm == nil {
 		return true
 	}
@@ -107,7 +105,7 @@ func (slf *User) IsAccess(URI string) bool {
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsUpdate(URI string) bool {
-	perm := slf.getPerm(URI)
+	perm := slf.getProfile(URI)
 	if perm == nil {
 		return true
 	}
@@ -120,7 +118,7 @@ func (slf *User) IsUpdate(URI string) bool {
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsDelete(URI string) bool {
-	perm := slf.getPerm(URI)
+	perm := slf.getProfile(URI)
 	if perm == nil {
 		return true
 	}
@@ -133,15 +131,15 @@ func (slf *User) IsDelete(URI string) bool {
 //@Param  (string) Inspection path
 //@Return (bool)
 func (slf *User) IsAppend(URI string) bool {
-	perm := slf.getPerm(URI)
+	perm := slf.getProfile(URI)
 	if perm == nil {
 		return true
 	}
 	return perm.isAppend()
 }
 
-func (slf *User) getPerm(URI string) *UserPerm {
-	for _, v := range slf.Perm {
+func (slf *User) getProfile(URI string) *UserProfile {
+	for _, v := range slf.Profile {
 		if v.URI == URI {
 			return &v
 		}

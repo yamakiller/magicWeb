@@ -1,7 +1,6 @@
 package frame
 
 import (
-	"runtime"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,41 +20,44 @@ type DefaultWeb struct {
 }
 
 //WithStart doc
-//@Method WithStart @Summary job start function to frame
+//@Summary job start function to frame
 //@Param (func()error)
 func (slf *DefaultWeb) WithStart(f func(IMagicWeb) error) {
 	slf._start = f
 }
 
 //Engine doc
-//@Method Engine @Summary Returns gin engine
+//@Summary Returns gin engine
 func (slf *DefaultWeb) Engine() *gin.Engine {
 	return slf._router
 }
 
 //Start doc
-//@Method Start @Summary start system
+//@Summary start system
 //@Return (error) start fail returns error
 func (slf *DefaultWeb) Start() error {
-	logEnvPath := args.Instance().GetString("-l", "./config/log.json")
-	logDeploy := logger.NewDefault()
+	release := args.Instance().GetBoolean("-release", false)
+	logPath := args.Instance().GetString("-logPath", "")
+	logSize := args.Instance().GetInt("-logSize", 128)
 
-	envs.Instance().Load(logger.EnvKey, logEnvPath, logDeploy)
 	slf._log = logger.New(func() logger.Logger {
 		l := logger.LogContext{}
-		l.SetFilPath(logDeploy.LogPath)
+		l.SetFilPath(logPath)
 		l.SetHandle(logrus.New())
-		l.SetMailMax(logDeploy.LogSize)
-		l.SetLevel(logrus.Level(logDeploy.LogLevel))
+		l.SetMailMax(logSize)
+		if release {
+			l.SetLevel(logrus.ErrorLevel)
+		} else {
+			l.SetLevel(logrus.InfoLevel)
+		}
 
 		formatter := new(prefixed.TextFormatter)
 		formatter.FullTimestamp = true
-		if runtime.GOOS == "windows" {
-			formatter.DisableColors = true
-		} else {
-			formatter.SetColorScheme(&prefixed.ColorScheme{
-				PrefixStyle: "blue+b"})
-		}
+		formatter.TimestampFormat = "2006-01-02 15:04:05"
+		formatter.DisableColors = true
+		formatter.SetColorScheme(&prefixed.ColorScheme{
+			PrefixStyle: "blue+b"})
+
 		l.SetFormatter(formatter)
 		l.Initial()
 		l.Redirect()
@@ -65,7 +67,6 @@ func (slf *DefaultWeb) Start() error {
 	logger.WithDefault(slf._log)
 	slf._log.Mount()
 
-	release := args.Instance().GetBoolean("-release", false)
 	if !release {
 		gin.SetMode(gin.DebugMode)
 	} else {
@@ -84,6 +85,7 @@ func (slf *DefaultWeb) Start() error {
 	//------------------------
 	addr := args.Instance().GetString("-p", "0.0.0.0:8080")
 	logger.Info(0, "HTTP on %s", addr)
+
 	slf._router.Run(addr)
 
 	return nil
@@ -99,12 +101,12 @@ func (slf *DefaultWeb) logmap() gin.HandlerFunc {
 		reqURI := c.Request.RequestURI
 		statusCode := c.Writer.Status()
 		clientIP := c.ClientIP()
-		slf._log.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+		logger.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
 	}
 }
 
 //Shutdown doc
-//@Method Shutdown @Summary shutdown system
+//@Summary shutdown system
 func (slf *DefaultWeb) Shutdown() {
 
 	if slf._log != nil {
