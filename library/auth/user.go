@@ -20,6 +20,13 @@ type ConfigUserProfile struct {
 	Items []UserProfile `xml:"items" yaml:"items" json:"items"`
 }
 
+//UserProfileItems doc
+//@Summary user Permission config
+//@Member []UserPerm Arrays
+type UserProfileItems struct {
+	Items []UserProfile `xml:"items" yaml:"items" json:"items"`
+}
+
 //UserProfile doc
 //@Summary User Permission table
 //@Member (string) Authorized address
