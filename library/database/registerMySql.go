@@ -10,7 +10,7 @@ import (
 
 //SQLDeploys mysql deploy group
 type SQLDeploys struct {
-	Items []SQLDeployItem `xml:"items" yaml:"items" json:"items"`
+	Items []SQLDeployItem `xml:"sqls" yaml:"sqls" json:"sqls"`
 }
 
 //SQLDeployItem mysql deploy item

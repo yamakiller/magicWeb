@@ -14,7 +14,7 @@ type AdminUser struct {
 	Mobile   string `gorm:"type:varchar(20);not null;"`
 
 	Profile   AdminProfile `gorm:"ForeignKey:ProfileID"`
-	ProfileID string
+	ProfileID string       `grom:"type:varchar(36);index"`
 
 	Backstage       uint8  `gorm:"not null;default 0"`
 	State           uint8  `gorm:"not null;default 0"`
@@ -31,5 +31,5 @@ type AdminUser struct {
 
 //TableName Returns table name
 func (AdminUser) TableName() string {
-	return "adminuser"
+	return "adminusers"
 }
