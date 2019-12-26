@@ -13,25 +13,25 @@ const (
 	ProfileAll = 0xF
 )
 
-//ConfigUserProfile doc
+//ConfigAdminUserProfile doc
 //@Summary user Permission config
 //@Member []UserPerm Arrays
-type ConfigUserProfile struct {
-	Items []UserProfile `xml:"items" yaml:"items" json:"items"`
+type ConfigAdminUserProfile struct {
+	Items []AdminUserProfile `xml:"items" yaml:"items" json:"items"`
 }
 
-//UserProfileItems doc
+//AdminUserProfileItems doc
 //@Summary user Permission config
 //@Member []UserPerm Arrays
-type UserProfileItems struct {
-	Items []UserProfile `xml:"items" yaml:"items" json:"items"`
+type AdminUserProfileItems struct {
+	Items []AdminUserProfile `xml:"items" yaml:"items" json:"items"`
 }
 
-//UserProfile doc
+//AdminUserProfile doc
 //@Summary User Permission table
 //@Member (string) Authorized address
 //@Member (int) Permission [1111]=>[append&delete&update&access]
-type UserProfile struct {
+type AdminUserProfile struct {
 	URI  string `xml:"uri" yaml:"uri" json:"uri"`
 	Auth int    `xml:"auth" yaml:"auth" json:"auth"`
 }
@@ -40,7 +40,7 @@ type UserProfile struct {
 //@Summary Whether to grant access
 //@Method isAccess
 //@Return (bool)
-func (slf *UserProfile) isAccess() bool {
+func (slf *AdminUserProfile) isAccess() bool {
 
 	if (slf.Auth & ProfileAccess) > 0 {
 		return true
@@ -52,7 +52,7 @@ func (slf *UserProfile) isAccess() bool {
 //@Whether authorization can be updated
 //@Method isUpdate
 //@Return (bool)
-func (slf *UserProfile) isUpdate() bool {
+func (slf *AdminUserProfile) isUpdate() bool {
 	if (slf.Auth & ProfileUpdate) > 0 {
 		return true
 	}
@@ -63,7 +63,7 @@ func (slf *UserProfile) isUpdate() bool {
 //@Summary Whether authorization can be deleted
 //@Method isDelete
 //@Return (bool)
-func (slf *UserProfile) isDelete() bool {
+func (slf *AdminUserProfile) isDelete() bool {
 	if (slf.Auth & ProfileDelete) > 0 {
 		return true
 	}
@@ -74,7 +74,7 @@ func (slf *UserProfile) isDelete() bool {
 //@Summary Whether authorization can be added
 //@Method isAppend
 //@Return (bool)
-func (slf *UserProfile) isAppend() bool {
+func (slf *AdminUserProfile) isAppend() bool {
 	if (slf.Auth & ProfileAppend) > 0 {
 		return true
 	}
@@ -86,10 +86,10 @@ func (slf *UserProfile) isAppend() bool {
 //@Struct User Claims
 //@Member
 type User struct {
-	Key       string        `xml:"key" yaml:"key" json:"key"`
-	Name      string        `xml:"name" yaml:"name" json:"name"`
-	LoginTime int           `xml:"logintime" yaml:"logintime" json:"logintime"`
-	Profile   []UserProfile `xml:"profiles" yaml:"profiles" json:"profiles"`
+	Key       string             `xml:"key" yaml:"key" json:"key"`
+	Name      string             `xml:"name" yaml:"name" json:"name"`
+	LoginTime int                `xml:"logintime" yaml:"logintime" json:"logintime"`
+	Profile   []AdminUserProfile `xml:"profiles" yaml:"profiles" json:"profiles"`
 }
 
 //IsAccess doc
@@ -145,7 +145,7 @@ func (slf *User) IsAppend(URI string) bool {
 	return perm.isAppend()
 }
 
-func (slf *User) getProfile(URI string) *UserProfile {
+func (slf *User) getProfile(URI string) *AdminUserProfile {
 	for _, v := range slf.Profile {
 		if v.URI == URI {
 			return &v

@@ -8,12 +8,12 @@ import (
 	"github.com/yamakiller/magicWeb/library/database"
 )
 
-//AuthLogin doc Verify login
+//AuthAdminLogin doc Verify login
 //Param  (*gin.Context) context
 //Param  (int) db
 //Param  (string) token secret
 //Param  (bool)   release
-func AuthLogin(context *gin.Context, db int, tokenSecret string, release bool) {
+func AuthAdminLogin(context *gin.Context, db int, tokenSecret string, release bool) {
 	if !release {
 		context.Next()
 		return
@@ -32,7 +32,7 @@ func AuthLogin(context *gin.Context, db int, tokenSecret string, release bool) {
 		return
 	}
 
-	tokenUserAccount, err := database.GetRdsOnlineAccount(db, tokenUser.ID)
+	tokenUserAccount, err := database.GetRdsOnlineAdminAccount(db, tokenUser.ID)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrOnlineUserNot())
 		logger.Debug(0, "authorization login token account invalid:%+v", err)

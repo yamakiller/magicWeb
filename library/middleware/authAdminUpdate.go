@@ -8,9 +8,9 @@ import (
 	"github.com/yamakiller/magicWeb/library/common"
 )
 
-//AuthUpdate Verify that you have update
+//AuthAdminUpdate Verify that you have update
 //Param  (*gin.Context) context
-func AuthUpdate(context *gin.Context, db int, tokenSecret string, release bool) {
+func AuthAdminUpdate(context *gin.Context, db int, tokenSecret string, release bool) {
 	if !release {
 		context.Next()
 		return
@@ -23,7 +23,7 @@ func AuthUpdate(context *gin.Context, db int, tokenSecret string, release bool) 
 		return
 	}
 
-	if !auth.VerifyProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileUpdate) {
+	if !auth.VerifyAdminProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileUpdate) {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
 		logger.Debug(0, "authorization profile update %s need update", context.Request.RequestURI)
 		return

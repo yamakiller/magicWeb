@@ -7,7 +7,7 @@ import (
 )
 
 //Enter doc
-//@Method Enter @Summary enter jwt system
+//@Summary enter jwt system
 //@Param (string) token secret
 //@Param (string) user id
 //@Param (string) user name

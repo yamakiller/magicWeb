@@ -26,7 +26,7 @@ const (
 	onlineUserActivedKey = "actived"
 )
 
-//CreateRdsOnlineUserVal doc
+//CreateRdsOnlineAdminUserVal doc
 //Summary Setting Online User data
 //Method SetOnlineUser
 //Param (string) user id
@@ -37,7 +37,7 @@ const (
 //Param (int)    user backstage 0.nomal user 1.admin user
 //Param (int)    user online expire time /mintue
 //Return (error)
-func CreateRdsOnlineUserVal(db int,
+func CreateRdsOnlineAdminUserVal(db int,
 	userid, token, username, userpwd, secret, profile, lasttime string,
 	backstage, expire int) error {
 	if _, err := redis.Instance().Do(db, "HMSET", common.GetRdsOnlineKey(userid),
@@ -54,59 +54,59 @@ func CreateRdsOnlineUserVal(db int,
 	}
 
 	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
-		RemoveOnlineUser(db, userid)
+		RemoveOnlineAdminUser(db, userid)
 		return err
 	}
 
 	return nil
 }
 
-//WithRdsOnlineToken Update Online User Token
+//WithRdsOnlineAdminToken Update Online User Token
 //Param  (int) db
 //Param  (string) user id
 //Param  (string) user token
 //Return (error)
-func WithRdsOnlineToken(db int, userid, token string) error {
+func WithRdsOnlineAdminToken(db int, userid, token string) error {
 	return withRdsOnlineVal(db, userid, onlineUserTokenKey, token)
 }
 
-//WithRdsOnlineActived Update Online User Actived last time
+//WithRdsOnlineAdminActived Update Online User Actived last time
 //Param  (int) db
 //Param  (string) user id
 //Return (error)
-func WithRdsOnlineActived(db int, userid string) error {
+func WithRdsOnlineAdminActived(db int, userid string) error {
 	return withRdsOnlineVal(db, userid, onlineUserActivedKey, time.Now().UnixNano()/int64(time.Millisecond))
 }
 
-//WithRdsOnlineProfile Update Online User profile informat
+//WithRdsOnlineAdminProfile Update Online User profile informat
 //Param  (int) db
 //Param  (string) user id
 //Param  (string) user profile
 //Return (error)
-func WithRdsOnlineProfile(db int, userid, profile string) error {
+func WithRdsOnlineAdminProfile(db int, userid, profile string) error {
 	return withRdsOnlineVal(db, userid, onlineUserProfileKey, profile)
 }
 
-//WithRdsOnlineBackstage Update Online User backstate state
+//WithRdsOnlineAdminBackstage Update Online User backstate state
 //Param  (int) db
 //Param  (string) user id
 //Param  (string) user backstate
 //Return (error)
-func WithRdsOnlineBackstage(db int, userid string, backstate int) error {
+func WithRdsOnlineAdminBackstage(db int, userid string, backstate int) error {
 	return withRdsOnlineVal(db, userid, onlineUserBackstageKey, backstate)
 }
 
-//VerifyRdsOnlineAccount verfiy Online User Account is exists
+//VerifyRdsOnlineAdminAccount verfiy Online User Account is exists
 //Param  (int) db
 //Param  (string) user id
 //Return (bool)
 //Return (error)
-func VerifyRdsOnlineAccount(db int, userid string) (bool, error) {
+func VerifyRdsOnlineAdminAccount(db int, userid string) (bool, error) {
 	return verifyRdsOnlineUserVal(db, userid, onlineUserAccountKey)
 }
 
-//GetRdsOnlineAccount return Online user Account
-func GetRdsOnlineAccount(db int, userid string) (string, error) {
+//GetRdsOnlineAdminAccount return Online user Account
+func GetRdsOnlineAdminAccount(db int, userid string) (string, error) {
 	act, err := getRdsOnlineUserVal(db, userid, onlineUserAccountKey)
 	if err != nil {
 		return "", err
@@ -115,8 +115,8 @@ func GetRdsOnlineAccount(db int, userid string) (string, error) {
 	return act.(string), nil
 }
 
-//GetRdsOnlinePassword return Online user Password
-func GetRdsOnlinePassword(db int, userid string) (string, error) {
+//GetRdsOnlineAdminPassword return Online user Password
+func GetRdsOnlineAdminPassword(db int, userid string) (string, error) {
 	pwd, err := getRdsOnlineUserVal(db, userid, onlineUserPwdKey)
 	if err != nil {
 		return "", err
@@ -125,8 +125,8 @@ func GetRdsOnlinePassword(db int, userid string) (string, error) {
 	return pwd.(string), nil
 }
 
-//GetRdsOnlineSecret return Online user secret
-func GetRdsOnlineSecret(db int, userid string) (string, error) {
+//GetRdsOnlineAdminSecret return Online user secret
+func GetRdsOnlineAdminSecret(db int, userid string) (string, error) {
 	secret, err := getRdsOnlineUserVal(db, userid, onlineUserSecretKey)
 	if err != nil {
 		return "", err
@@ -135,8 +135,8 @@ func GetRdsOnlineSecret(db int, userid string) (string, error) {
 	return secret.(string), nil
 }
 
-//GetRdsOnlineProfile return Online user profile
-func GetRdsOnlineProfile(db int, userid string) (string, error) {
+//GetRdsOnlineAdminProfile return Online user profile
+func GetRdsOnlineAdminProfile(db int, userid string) (string, error) {
 	profile, err := getRdsOnlineUserVal(db, userid, onlineUserProfileKey)
 	if err != nil {
 		return "", err
@@ -145,8 +145,8 @@ func GetRdsOnlineProfile(db int, userid string) (string, error) {
 	return profile.(string), nil
 }
 
-//GetRdsOnlineBackstage return Online user backstate state
-func GetRdsOnlineBackstage(db int, userid string) (int, error) {
+//GetRdsOnlineAdminBackstage return Online user backstate state
+func GetRdsOnlineAdminBackstage(db int, userid string) (int, error) {
 	backstate, err := getRdsOnlineUserVal(db, userid, onlineUserBackstageKey)
 	if err != nil {
 		return 0, err
@@ -155,8 +155,8 @@ func GetRdsOnlineBackstage(db int, userid string) (int, error) {
 	return backstate.(int), nil
 }
 
-//GetRdsOnlineLoginLastTime return Online user logined last time
-func GetRdsOnlineLoginLastTime(db int, userid string) (string, error) {
+//GetRdsOnlineAdminLoginLastTime return Online user logined last time
+func GetRdsOnlineAdminLoginLastTime(db int, userid string) (string, error) {
 	lasttime, err := getRdsOnlineUserVal(db, userid, onlineUserLasttimeKey)
 	if err != nil {
 		return "", err
@@ -165,8 +165,8 @@ func GetRdsOnlineLoginLastTime(db int, userid string) (string, error) {
 	return lasttime.(string), nil
 }
 
-//GetRdsOnlineActived return Online user actived last time
-func GetRdsOnlineActived(db int, userid string) (int64, error) {
+//GetRdsOnlineAdminActived return Online user actived last time
+func GetRdsOnlineAdminActived(db int, userid string) (int64, error) {
 	lasttime, err := getRdsOnlineUserVal(db, userid, onlineUserActivedKey)
 	if err != nil {
 		return 0, err
@@ -202,11 +202,11 @@ func getRdsOnlineUserVal(db int, userid, key string) (interface{}, error) {
 	return redis.Instance().Do(db, "HGET", common.GetRdsOnlineKey(userid), key)
 }
 
-//WithRdsOnlineExpire doc
+//WithRdsOnlineAdminExpire doc
 //Summary Update Online user data expire
 //Param (string) user id
 //Param  (int) expire second
-func WithRdsOnlineExpire(db int, userid string, expire int) error {
+func WithRdsOnlineAdminExpire(db int, userid string, expire int) error {
 	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
 		return err
 	}
@@ -214,7 +214,7 @@ func WithRdsOnlineExpire(db int, userid string, expire int) error {
 	return nil
 }
 
-//RemoveOnlineUser doc
+//RemoveOnlineAdminUser doc
 //Summary Remove Online User data
 //Method RemoveOnlineUser
 //Param (string) user id
@@ -224,7 +224,7 @@ func WithRdsOnlineExpire(db int, userid string, expire int) error {
 //Param (string) user last login time
 //Param (int)    user feature 0.nomal user 1.admin user
 //Return (error)
-func RemoveOnlineUser(db int, userid string) error {
+func RemoveOnlineAdminUser(db int, userid string) error {
 	if _, err := redis.Instance().Do(db,
 		"HDEL", common.GetRdsOnlineKey(userid),
 		onlineUserTokenKey,

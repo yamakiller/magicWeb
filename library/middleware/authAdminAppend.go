@@ -8,9 +8,9 @@ import (
 	"github.com/yamakiller/magicWeb/library/common"
 )
 
-//AuthDelete Verify that you have delete
+//AuthAdminAppend Verify that you have append
 //Param  (*gin.Context) context
-func AuthDelete(context *gin.Context, db int, tokenSecret string, release bool) {
+func AuthAdminAppend(context *gin.Context, db int, tokenSecret string, release bool) {
 	if !release {
 		context.Next()
 		return
@@ -19,13 +19,13 @@ func AuthDelete(context *gin.Context, db int, tokenSecret string, release bool) 
 	profileItems, err := GetRequestTokenProfile(context, db, tokenSecret)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
-		logger.Debug(0, "authorization profile delete error:%+v", err)
+		logger.Debug(0, "authorization profile append error:%+v", err)
 		return
 	}
 
-	if !auth.VerifyProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileDelete) {
+	if !auth.VerifyAdminProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileAppend) {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
-		logger.Debug(0, "authorization profile delete %s need delete", context.Request.RequestURI)
+		logger.Debug(0, "authorization profile append %s need append", context.Request.RequestURI)
 		return
 	}
 

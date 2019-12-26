@@ -25,7 +25,7 @@ func AuthAdmin(context *gin.Context, db int, tokenSecret string, release bool) {
 		logger.Debug(0, "authorization admin token invalid:%+v", err)
 		return
 	}
-	backstage, err := database.GetRdsOnlineBackstage(db, tokenUser.ID)
+	backstage, err := database.GetRdsOnlineAdminBackstage(db, tokenUser.ID)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
 		logger.Debug(0, "authorization admin get backstate error:%+v", err)

@@ -8,9 +8,9 @@ import (
 	"github.com/yamakiller/magicWeb/library/common"
 )
 
-//AuthAccess Verify that you have access
+//AuthAdminAccess Verify that you have access
 //Param  (*gin.Context) context
-func AuthAccess(context *gin.Context, db int, tokenSecret string, release bool) {
+func AuthAdminAccess(context *gin.Context, db int, tokenSecret string, release bool) {
 	if !release {
 		context.Next()
 		return
@@ -23,7 +23,7 @@ func AuthAccess(context *gin.Context, db int, tokenSecret string, release bool) 
 		return
 	}
 
-	if !auth.VerifyProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileAccess) {
+	if !auth.VerifyAdminProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileAccess) {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
 		logger.Debug(0, "authorization profile access %s need access", context.Request.RequestURI)
 		return
