@@ -137,3 +137,8 @@ func SpawnErrConfigNot() message.Response {
 func SpawnErrUserExitis() message.Response {
 	return message.Response{Code: ErrUserExitis, Msg: ErrMsgUserExitis}
 }
+
+//SpawnErrUserFailCap doc
+func SpawnErrUserFailCap() message.Response {
+	return message.Response{Code: ErrUserFailCap, Msg: ErrMsgUserFailCap}
+}

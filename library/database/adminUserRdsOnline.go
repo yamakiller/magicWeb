@@ -66,8 +66,16 @@ func CreateRdsOnlineAdminUserVal(db int,
 //Param  (string) user id
 //Param  (string) user token
 //Return (error)
-func WithRdsOnlineAdminToken(db int, userid, token string) error {
-	return withRdsOnlineVal(db, userid, onlineUserTokenKey, token)
+func WithRdsOnlineAdminToken(db int, userid, token string, expire int) error {
+	if err := withRdsOnlineVal(db, userid, onlineUserTokenKey, token); err != nil {
+		return err
+	}
+
+	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
+		RemoveOnlineAdminUser(db, userid)
+		return err
+	}
+	return nil 
 }
 
 //WithRdsOnlineAdminActived Update Online User Actived last time
