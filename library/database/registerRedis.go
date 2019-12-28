@@ -7,7 +7,7 @@ import (
 
 //RedisDeployGroup redis connection pool config group
 type RedisDeployGroup struct {
-	Items []dbs.RedisDeploy `xml:"redis-group" yaml:"redis group" json:"redis-group"`
+	Items []dbs.RedisDeploy `xml:"redis" yaml:"redis" json:"redis"`
 }
 
 //RedisRegister register redis connection pool

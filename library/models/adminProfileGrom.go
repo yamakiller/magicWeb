@@ -2,12 +2,12 @@ package models
 
 import "time"
 
-//AdminProfile perm group info
+//AdminProfile Table
 type AdminProfile struct {
-	ID        string `grom:"primary_key;type:varchar(36)"`
-	Name      string `grom:"type:varchar(16);not null;"`
-	Data      string `grom:"type:longtext"`
-	Order     uint8  `grom:"default 0"`
+	ID        string `gorm:"primary_key;type:varchar(36);not null;"`
+	Name      string `gorm:"type:varchar(16);not null;"`
+	Data      string `gorm:"type:longtext;"`
+	Order     uint8  `gorm:"not null;"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`

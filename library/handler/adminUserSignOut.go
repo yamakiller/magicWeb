@@ -9,8 +9,8 @@ import (
 	"github.com/yamakiller/magicWeb/library/message"
 )
 
-//AdminSignOut admin user sign-out
-func AdminSignOut(context *gin.Context,
+//AdminUserSignOut admin user sign-out
+func AdminUserSignOut(context *gin.Context,
 	cacheDB int,
 	tokenSecret string) *message.Response {
 

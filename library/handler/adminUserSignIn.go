@@ -3,7 +3,7 @@ package handler
 import (
 	"time"
 
-	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicLibs/util"
@@ -15,8 +15,8 @@ import (
 	"github.com/yamakiller/magicWeb/library/models"
 )
 
-//AdminSignIn admin user sign-in
-func AdminSignIn(context *gin.Context,
+//AdminUserSignIn admin user sign-in
+func AdminUserSignIn(context *gin.Context,
 	cacheDB int,
 	sqlHandle,
 	tokenSecret,
@@ -80,7 +80,7 @@ func AdminSignIn(context *gin.Context,
 		goto fail
 	}
 
-	if usr.Fail > failCap && (time.Now().Unix()-usr.FailLastTime.Unix()) < failExpire {
+	if int(usr.Fail) > failCap && (time.Now().Unix()-usr.FailLastTime.Unix()) < int64(failExpire) {
 		logger.Debug(0, "SignIn Admin fail limit:[%d:%d]", usr.Fail, (time.Now().Unix() - usr.FailLastTime.Unix()))
 		errResult = code.SpawnErrUserFailCap()
 		goto fail

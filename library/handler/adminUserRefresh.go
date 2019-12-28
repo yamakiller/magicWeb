@@ -11,7 +11,8 @@ import (
 )
 
 //AdminUserRefresh admin logined refresh token
-func AdminUserRefresh(context *gin.Contextn, cacheDB int, tokenSecret string, tokenExpire int) (string, *message.Response) {
+func AdminUserRefresh(context *gin.Context, cacheDB int, tokenSecret string, tokenExpire int) (string, *message.Response) {
+	var token string
 	var errResult message.Response
 	tokenUser, err := common.GetRequestToken(context, tokenSecret)
 	if err != nil {
@@ -20,14 +21,14 @@ func AdminUserRefresh(context *gin.Contextn, cacheDB int, tokenSecret string, to
 		goto fail
 	}
 
-	account, err := database.GetRdsOnlineAdminAccount(cacheDB, tokenUser.ID)
+	_, err = database.GetRdsOnlineAdminAccount(cacheDB, tokenUser.ID)
 	if err != nil {
 		logger.Debug(0, "authorization refresh token error:%s", err.Error())
 		errResult = code.SpawnErrOnlineUserNot()
 		goto fail
 	}
 
-	token, err := auth.Enter(tokenSecret, tokenUser.ID, tokenUser.Account, tokenUser.Password, tokenExpire)
+	token, err = auth.Enter(tokenSecret, tokenUser.ID, tokenUser.Account, tokenUser.Password, tokenExpire)
 	if err != nil {
 		logger.Debug(0, "authorization refresh token error:%s", err.Error())
 		errResult = code.SpawnErrSystem()
@@ -39,8 +40,6 @@ func AdminUserRefresh(context *gin.Contextn, cacheDB int, tokenSecret string, to
 		errResult = code.SpawnErrSystem()
 		goto fail
 	}
-
-	database.With
 
 	return token, nil
 

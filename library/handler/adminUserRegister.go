@@ -3,7 +3,7 @@ package handler
 import (
 	"time"
 
-	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
 	"github.com/yamakiller/magicLibs/logger"
@@ -71,7 +71,7 @@ func AdminUserRegister(context *gin.Context,
 		goto fail
 	}
 
-	secret = util.RandStr(8)
+	secret = util.RandStr(16)
 	password, err = util.AesEncrypt(secret, pwd)
 	if err != nil {
 		logger.Error(0, "Register password encrypt error:%s", err.Error)
