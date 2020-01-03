@@ -1,24 +1,19 @@
 package valid
 
 import (
-	"reflect"
+	"strings"
 
-	"gopkg.in/go-playground/validator.v8"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 //OrderDirectValid doc
 //Summary validator int is order direct is valid
 //Method OrderDirectValid
 //Return (bool)
-func OrderDirectValid(v *validator.Validate, topStruct reflect.Value, currentStructOrField reflect.Value,
-	field reflect.Value, fieldType reflect.Type, fieldKind reflect.Kind, param string,
-) bool {
-	if s, ok := field.Interface().(int); ok {
-		if s > 1 || s < 0 {
-			return false
-		}
+func OrderDirectValid(fl validator.FieldLevel) bool {
+	value := strings.ToLower(fl.Field().String())
+	if value == "asc" || value == "desc" {
 		return true
 	}
-
 	return false
 }

@@ -1,6 +1,8 @@
 package captcha
 
 import (
+	"fmt"
+
 	"github.com/mojocn/base64Captcha"
 )
 
@@ -8,8 +10,8 @@ import (
 //@Method GenerateCaptcha @Summary Generate Image Captcha
 //@Param (*gin.Context)
 func GenerateCaptcha(w, h, m int) (string, string) {
-	var id string
-
+	var id string = ""
+	fmt.Println(w, h, m)
 	config := base64Captcha.ConfigCharacter{
 		Height:             w,
 		Width:              h,

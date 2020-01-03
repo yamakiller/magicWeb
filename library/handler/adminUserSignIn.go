@@ -1,7 +1,9 @@
 package handler
 
 import (
-	"github.com/gin-contrib/sessions"
+	"time"
+
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicLibs/util"
@@ -13,13 +15,15 @@ import (
 	"github.com/yamakiller/magicWeb/library/models"
 )
 
-//AdminSignIn admin user sign-in
-func AdminSignIn(context *gin.Context,
-	CacheDB int,
+//AdminUserSignIn admin user sign-in
+func AdminUserSignIn(context *gin.Context,
+	cacheDB int,
 	sqlHandle,
 	tokenSecret,
 	captchaKey string,
-	loginExpire int,
+	tokenExpire int,
+	failCap int,
+	failExpire int,
 	account,
 	password,
 	captchaVal string) (*message.Response, *models.AdminUser, string) {
@@ -65,7 +69,7 @@ func AdminSignIn(context *gin.Context,
 
 	usr, err = database.GetAdminUserSignIn(account, sqlHandle)
 	if err != nil {
-		logger.Error(0, "SignIn Admin fail:%+v", err)
+		logger.Error(0, "SignIn Admin fail:%s", err.Error())
 		errResult = code.SpawnErrDbAbnormal()
 		goto fail
 	}
@@ -76,27 +80,36 @@ func AdminSignIn(context *gin.Context,
 		goto fail
 	}
 
+	if int(usr.Fail) > failCap && (time.Now().Unix()-usr.FailLastTime.Unix()) < int64(failExpire) {
+		logger.Debug(0, "SignIn Admin fail limit:[%d:%d]", usr.Fail, (time.Now().Unix() - usr.FailLastTime.Unix()))
+		errResult = code.SpawnErrUserFailCap()
+		goto fail
+	}
+
 	p, err = util.AesEncrypt(usr.Secret, account)
 	if err != nil {
-		logger.Error(0, "Login fail encrypt error:%+v", err)
+		logger.Error(0, "SignIn Admin fail encrypt error:%s", err.Error())
 		errResult = code.SpawnErrSystem()
 		goto fail
 	}
 
 	if p != usr.Password {
-		logger.Debug(0, "Login password error:%s", account)
+		logger.Debug(0, "SignIn Admin password error:%s", account)
 		errResult = code.SpawnErrPwd()
+		if err = database.WithAdminUserSignInFail(usr.Account, sqlHandle); err != nil {
+			logger.Error(0, "SignIn Admin fail update state error:%s", err.Error())
+		}
 		goto fail
 	}
 
-	token, err = auth.Enter(tokenSecret, usr.ID, usr.Account, usr.Password, loginExpire)
+	token, err = auth.Enter(tokenSecret, usr.ID, usr.Account, usr.Password, tokenExpire)
 	if err != nil {
-		logger.Error(0, "Login auth jwt error:%+v", err)
+		logger.Error(0, "SignIn Admin jwt error:%s", err.Error())
 		errResult = code.SpawnErrSystem()
 		goto fail
 	}
 
-	if err = database.CreateRdsOnlineAdminUserVal(CacheDB,
+	if err = database.CreateRdsOnlineAdminUserVal(cacheDB,
 		usr.ID,
 		token,
 		usr.Account,
@@ -105,10 +118,14 @@ func AdminSignIn(context *gin.Context,
 		usr.Profile.Data,
 		util.TimeNowFormat(),
 		int(usr.Backstage),
-		loginExpire*2); err != nil {
-		logger.Error(0, "Login auth redis error:%+v", err)
+		tokenExpire*2); err != nil {
+		logger.Error(0, "SignIn Admin auth redis error:%s", err.Error())
 		errResult = code.SpawnErrSystem()
 		goto fail
+	}
+
+	if err = database.WithAdminUserSignInSuccess(usr.Account, context.ClientIP(), sqlHandle); err != nil {
+		logger.Error(0, "SignIn Admin Complate update state error:%s", err.Error())
 	}
 
 	return nil, usr, token

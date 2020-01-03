@@ -23,7 +23,7 @@ func SetupAdminUserDB(sqlHandle string) error {
 	adminUser.ID = util.SpawnUUID()
 
 	pwd := "admin"
-	secret := util.RandStr(8)
+	secret := util.RandStr(16)
 	password, e := util.AesEncrypt(secret, pwd)
 	if e != nil {
 		return fmt.Errorf("install admin user password encrypt error:%+v", e)

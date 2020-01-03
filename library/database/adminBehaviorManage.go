@@ -11,9 +11,9 @@ import (
 //AdminBehaviorAppend append admin behavior log
 func AdminBehaviorAppend(sqlHandle, adminUserID, bev string) error {
 	behavior := models.AdminBehavior{ID: util.SpawnUUID(),
-		OperAdminID: adminUserID,
-		Behavior:    bev,
-		CreatedAt:   time.Now()}
+		OperUserID: adminUserID,
+		Behavior:   bev,
+		CreatedAt:  time.Now()}
 	return mysql.Instance().DB(sqlHandle).Create(&behavior).Error
 }
 

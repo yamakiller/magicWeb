@@ -35,6 +35,8 @@ const (
 	ErrConfigNot = int(-16)
 	//ErrUserExitis user already exists error of code
 	ErrUserExitis = int(-17)
+	//ErrUserFailCap user signIn error limit of code
+	ErrUserFailCap = int(-18)
 )
 
 const (
@@ -72,4 +74,6 @@ const (
 	ErrMsgConfigNot = "config data non-existent"
 	//ErrMsgUserExitis user already exists error of message
 	ErrMsgUserExitis = "user already exists"
+	//ErrMsgUserFailCap user signIn error limit of message
+	ErrMsgUserFailCap = "Continuous login failed, account is locked"
 )
