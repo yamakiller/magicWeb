@@ -12,6 +12,7 @@ type AdminUser struct {
 	Level           int          `gorm:"not null;"`
 	Email           string       `gorm:"type:varchar(128);not null;"`
 	Mobile          string       `gorm:"type:varchar(20);not null;"`
+	Identity        string       `gorm:"type:varchar(20);not null;"`
 	Profile         AdminProfile `gorm:"ForeignKey:ProfileID;AssociationForeignKey:ID;"`
 	ProfileID       string       `gorm:"type:varchar(36);index;not null;"`
 	Backstage       uint8        `gorm:"not null;"`

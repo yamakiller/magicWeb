@@ -22,6 +22,7 @@ func AdminUserRegister(context *gin.Context,
 	pwd,
 	againPwd,
 	profileID,
+	Identity,
 	captchaVal string) *message.Response {
 	var errResult message.Response
 	var err error
@@ -83,6 +84,7 @@ func AdminUserRegister(context *gin.Context,
 	rAdminUsr.Account = account
 	rAdminUsr.Password = password
 	rAdminUsr.Nick = account
+	rAdminUsr.Identity = Identity
 	rAdminUsr.Secret = secret
 	rAdminUsr.State = 0
 	rAdminUsr.Backstage = 1
