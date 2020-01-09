@@ -45,7 +45,7 @@ func (slf *DefaultWeb) Start() error {
 	}
 	//------------------------
 	addr := args.Instance().GetString("-addr", "0.0.0.0:8080")
-	if release {
+	if args.Instance().GetBoolean("-release", false) {
 		logger.Info(0, "HTTP on %s", addr)
 	}
 
