@@ -7,5 +7,5 @@ package message
 //Member (interface{}) message or data
 type Response struct {
 	Code int         `json:"code"`
-	Msg  interface{} `json:"msg"`
+	Data interface{} `json:"data"`
 }

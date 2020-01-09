@@ -16,5 +16,5 @@ func GetCaptcha(context *gin.Context, width, height, mode int, captchaKey string
 	session := sessions.Default(context)
 	session.Set(config.CaptchaSessionKey, captchID)
 
-	context.String(http.StatusOK, base64Png)
+	context.String(http.StatusOK, code.SpawnResponse(base64Png))
 }
