@@ -8,8 +8,9 @@ type ConfigAdminUserProfileItems struct {
 }
 
 type ConfigAdminUserProfile struct {
-	Name string `xml:"name" yaml:"name" json:"name"`
-	URI  string `xml:"uri" yaml:"uri" json:"uri"`
+	Name  string `xml:"name" yaml:"name" json:"name"`
+	URI   string `xml:"uri" yaml:"uri" json:"uri"`
+	Local string `xml:"local" yaml:"local" json:"local"`
 }
 
 //AdminUserProfileItems doc
