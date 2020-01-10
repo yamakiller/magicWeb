@@ -5,6 +5,6 @@ package common
 //Method GetOnlineKey
 //Param (string) user id
 //Return (string) user key
-func GetRdsOnlineKey(userid string) string {
-	return "user:" + userid
+func GetAdminRdsOnlineKey(userid string) string {
+	return "adminuser:" + userid
 }

@@ -40,7 +40,7 @@ const (
 func CreateRdsOnlineAdminUserVal(db int,
 	userid, token, username, userpwd, secret, profile, lasttime string,
 	backstage, expire int) error {
-	if _, err := redis.Instance().Do(db, "HMSET", common.GetRdsOnlineKey(userid),
+	if _, err := redis.Instance().Do(db, "HMSET", common.GetAdminRdsOnlineKey(userid),
 		onlineUserTokenKey, token,
 		onlineUserAccountKey, username,
 		onlineUserPwdKey, userpwd,
@@ -49,11 +49,11 @@ func CreateRdsOnlineAdminUserVal(db int,
 		onlineUserBackstageKey, backstage,
 		onlineUserLasttimeKey, lasttime,
 		onlineUserActivedKey, time.Now().UnixNano()/int64(time.Millisecond)); err != nil {
-		redis.Instance().Do(db, "DEL", common.GetRdsOnlineKey(userid))
+		redis.Instance().Do(db, "DEL", common.GetAdminRdsOnlineKey(userid))
 		return err
 	}
 
-	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
+	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
 		RemoveOnlineAdminUser(db, userid)
 		return err
 	}
@@ -71,11 +71,11 @@ func WithRdsOnlineAdminToken(db int, userid, token string, expire int) error {
 		return err
 	}
 
-	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
+	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
 		RemoveOnlineAdminUser(db, userid)
 		return err
 	}
-	return nil 
+	return nil
 }
 
 //WithRdsOnlineAdminActived Update Online User Actived last time
@@ -184,7 +184,7 @@ func GetRdsOnlineAdminActived(db int, userid string) (int64, error) {
 }
 
 func withRdsOnlineVal(db int, userid string, key string, value interface{}) error {
-	if _, err := redis.Instance().Do(db, "HMSet", common.GetRdsOnlineKey(userid),
+	if _, err := redis.Instance().Do(db, "HMSet", common.GetAdminRdsOnlineKey(userid),
 		key, value); err != nil {
 		return err
 	}
@@ -192,7 +192,7 @@ func withRdsOnlineVal(db int, userid string, key string, value interface{}) erro
 }
 
 func verifyRdsOnlineUserVal(db int, userid, key string) (bool, error) {
-	v, err := redis.Instance().Do(db, "HEXISTS", common.GetRdsOnlineKey(userid), key)
+	v, err := redis.Instance().Do(db, "HEXISTS", common.GetAdminRdsOnlineKey(userid), key)
 	if err != nil {
 		return false, err
 	}
@@ -207,7 +207,7 @@ func verifyRdsOnlineUserVal(db int, userid, key string) (bool, error) {
 //Return (interface{}) value
 //Return (error)
 func getRdsOnlineUserVal(db int, userid, key string) (interface{}, error) {
-	return redis.Instance().Do(db, "HGET", common.GetRdsOnlineKey(userid), key)
+	return redis.Instance().Do(db, "HGET", common.GetAdminRdsOnlineKey(userid), key)
 }
 
 //WithRdsOnlineAdminExpire doc
@@ -215,7 +215,7 @@ func getRdsOnlineUserVal(db int, userid, key string) (interface{}, error) {
 //Param (string) user id
 //Param  (int) expire second
 func WithRdsOnlineAdminExpire(db int, userid string, expire int) error {
-	if _, err := redis.Instance().Do(db, "expire", common.GetRdsOnlineKey(userid), expire); err != nil {
+	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
 		return err
 	}
 
@@ -234,7 +234,7 @@ func WithRdsOnlineAdminExpire(db int, userid string, expire int) error {
 //Return (error)
 func RemoveOnlineAdminUser(db int, userid string) error {
 	if _, err := redis.Instance().Do(db,
-		"HDEL", common.GetRdsOnlineKey(userid),
+		"HDEL", common.GetAdminRdsOnlineKey(userid),
 		onlineUserTokenKey,
 		onlineUserAccountKey,
 		onlineUserPwdKey,
