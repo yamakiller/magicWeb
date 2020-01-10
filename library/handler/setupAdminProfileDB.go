@@ -26,7 +26,7 @@ func SetupAdminProfileDB(sqlHandle string) error {
 	}
 	//2.insert base data
 	adminProfile := auth.AdminUserProfileItems{}
-	adminProfile.Items = append(adminProfile.Items, auth.AdminUserProfile{URI: "ALL", Auth: auth.ProfileAll})
+	adminProfile.Items = append(adminProfile.Items, auth.AdminUserProfile{URI: "ALL"})
 	s := util.JSONSerialize(adminProfile)
 	profileData := models.AdminProfile{}
 	profileData.ID = adminSuperProfileID

@@ -6,15 +6,14 @@ import "strings"
 //Summary Verify permissions
 //param ([]UserPerm) permissions array
 //param (string)     access uri
-//param (int)        need permissions
 //return (bool)      yes/no
-func VerifyAdminProfile(profiles []AdminUserProfile, uri string, need int) bool {
+func VerifyAdminProfile(profiles []AdminUserProfile, uri string) bool {
 	for _, v := range profiles {
-		if strings.ToLower(v.URI) == "all" && (v.Auth&need) != 0 {
+		if strings.ToLower(v.URI) == "all" {
 			return true
 		}
 
-		if strings.Index(uri, v.URI) >= 0 && (v.Auth&need) != 0 {
+		if uri == v.URI {
 			return true
 		}
 	}

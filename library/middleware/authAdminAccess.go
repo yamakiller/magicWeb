@@ -23,7 +23,7 @@ func AuthAdminAccess(context *gin.Context, db int, tokenSecret string, release b
 		return
 	}
 
-	if !auth.VerifyAdminProfile(profileItems.Items, context.Request.RequestURI, auth.ProfileAccess) {
+	if !auth.VerifyAdminProfile(profileItems.Items, context.Request.RequestURI) {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
 		logger.Debug(0, "authorization profile access %s need access", context.Request.RequestURI)
 		return

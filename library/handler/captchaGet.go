@@ -5,16 +5,15 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/yamakiller/carPlays/app/config"
 	"github.com/yamakiller/magicWeb/library/captcha"
+	"github.com/yamakiller/magicWeb/library/code"
 )
 
 //GetCaptcha Return CaptchaImage
 func GetCaptcha(context *gin.Context, width, height, mode int, captchaKey string) {
-
 	captchID, base64Png := captcha.GenerateCaptcha(width, height, mode)
 	session := sessions.Default(context)
-	session.Set(config.CaptchaSessionKey, captchID)
+	session.Set(captchaKey, captchID)
 
-	context.String(http.StatusOK, code.SpawnResponse(base64Png))
+	context.JSON(http.StatusOK, code.SpawnResponse(base64Png))
 }
