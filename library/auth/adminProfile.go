@@ -13,7 +13,7 @@ func VerifyAdminProfile(profiles []AdminUserProfile, uri string) bool {
 			return true
 		}
 
-		if uri == v.URI {
+		if strings.Index(uri, v.URI) >= 0 {
 			return true
 		}
 	}

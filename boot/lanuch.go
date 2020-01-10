@@ -29,9 +29,9 @@ func Lanuch(spawn frame.Spawn) {
 		l.SetHandle(logrus.New())
 		l.SetMailMax(logSize)
 		if release {
-			l.SetLevel(logrus.ErrorLevel)
-		} else {
 			l.SetLevel(logrus.InfoLevel)
+		} else {
+			l.SetLevel(logrus.DebugLevel)
 		}
 
 		formatter := new(prefixed.TextFormatter)
@@ -58,20 +58,26 @@ func Lanuch(spawn frame.Spawn) {
 		mode = "RELEASE"
 	}
 
-	logger.Info(0, "                    _      __    __     _                        _       _")
-	logger.Info(0, "   /\\/\\   __ _  __ _(_) ___/ / /\\ \\ \\___| |__     /\\/\\   ___   __| |_   _| | ___")
-	logger.Info(0, "  /    \\ / _` |/ _` | |/ __\\ \\/  \\/ / _ \\ '_ \\   /    \\ / _ \\ / _` | | | | |/ _ \\")
-	logger.Info(0, " / /\\/\\ \\ (_| | (_| | | (__ \\  /\\  /  __/ |_) | / /\\/\\ \\ (_) | (_| | |_| | |  __/")
-	logger.Info(0, " \\/    \\/\\__,_|\\__, |_|\\___| \\/  \\/ \\___|_.__/  \\/    \\/\\___/ \\__,_|\\__,_|_|\\___|")
-	logger.Info(0, "  ::magic net::|___/ (v%s %s %s)", version.BuildVersion, mode, version.BuildTime)
-	logger.Info(0, " ::%s %s", version.CommitID, util.TimeNowFormat())
-	logger.Info(0, "---------------------------------------------------------------------------")
+	if release {
+		logger.Info(0, "                     _      __    __     _                        _       _")
+		logger.Info(0, "   /\\/\\   __ _  __ _(_) ___/ / /\\ \\ \\___| |__     /\\/\\   ___   __| |_   _| | ___")
+		logger.Info(0, "  /    \\ / _` |/ _` | |/ __\\ \\/  \\/ / _ \\ '_ \\   /    \\ / _ \\ / _` | | | | |/ _ \\")
+		logger.Info(0, " / /\\/\\ \\ (_| | (_| | | (__ \\  /\\  /  __/ |_) | / /\\/\\ \\ (_) | (_| | |_| | |  __/")
+		logger.Info(0, " \\/    \\/\\__,_|\\__, |_|\\___| \\/  \\/ \\___|_.__/  \\/    \\/\\___/ \\__,_|\\__,_|_|\\___|")
+		logger.Info(0, "  ::magic net::|___/ (v%s %s %s)", version.BuildVersion, mode, version.BuildTime)
+		logger.Info(0, " ::%s %s", version.CommitID, util.TimeNowFormat())
+		logger.Info(0, "----------------------------------------------------------------------------------")
+	}
 
 	if err = frm.Start(); err != nil {
-		logger.Error(0, "%+v", err)
+		logger.Error(0, "%s", err.Error())
 		goto exit
 	}
 
 exit:
+	if log != nil {
+		log.Close()
+		log = nil
+	}
 	frm.Shutdown()
 }

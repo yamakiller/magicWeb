@@ -10,8 +10,8 @@ import (
 )
 
 //GetCaptcha Return CaptchaImage
-func GetCaptcha(context *gin.Context, width, height, mode int, captchaKey string) {
-	captchID, base64Png := captcha.GenerateCaptcha(width, height, mode)
+func GetCaptcha(context *gin.Context, width, height int, captchaKey string) {
+	captchID, base64Png := captcha.GenerateCaptcha(width, height)
 	session := sessions.Default(context)
 	session.Set(captchaKey, captchID)
 

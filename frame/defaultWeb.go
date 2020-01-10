@@ -12,9 +12,9 @@ import (
 //DefaultWeb doc
 //@Struct DefaultWeb @Summary Default web framework
 type DefaultWeb struct {
-	_log    logger.Logger
-	_router *gin.Engine
-	_start  func(IMagicWeb) error
+	_release bool
+	_router  *gin.Engine
+	_start   func(IMagicWeb) error
 }
 
 //WithStart doc
@@ -34,10 +34,11 @@ func (slf *DefaultWeb) Engine() *gin.Engine {
 //@Summary start system
 //@Return (error) start fail returns error
 func (slf *DefaultWeb) Start() error {
+	slf._release = args.Instance().GetBoolean("-release", false)
 	//------------------------------
 	//create http router
 	slf._router = gin.Default()
-	slf._router.Use(slf.logmap())
+	slf._router.Use(slf.logMaps())
 	if slf._start != nil {
 		if err := slf._start(slf); err != nil {
 			return err
@@ -45,7 +46,7 @@ func (slf *DefaultWeb) Start() error {
 	}
 	//------------------------
 	addr := args.Instance().GetString("-addr", "0.0.0.0:8080")
-	if args.Instance().GetBoolean("-release", false) {
+	if slf._release {
 		logger.Info(0, "HTTP on %s", addr)
 	}
 
@@ -54,27 +55,24 @@ func (slf *DefaultWeb) Start() error {
 	return nil
 }
 
-func (slf *DefaultWeb) logmap() gin.HandlerFunc {
+func (slf *DefaultWeb) logMaps() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		startTime := time.Now()
-		c.Next()
-		endTime := time.Now()
-		latencyTime := endTime.Sub(startTime)
-		reqMethod := c.Request.Method
-		reqURI := c.Request.RequestURI
-		statusCode := c.Writer.Status()
-		clientIP := c.ClientIP()
-		logger.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+		if slf._release {
+			startTime := time.Now()
+			c.Next()
+			endTime := time.Now()
+			latencyTime := endTime.Sub(startTime)
+			reqMethod := c.Request.Method
+			reqURI := c.Request.RequestURI
+			statusCode := c.Writer.Status()
+			clientIP := c.ClientIP()
+			logger.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+		}
 	}
 }
 
 //Shutdown doc
 //@Summary shutdown system
 func (slf *DefaultWeb) Shutdown() {
-
-	if slf._log != nil {
-		slf._log.Close()
-		slf._log = nil
-	}
 	envs.Instance().UnLoad()
 }

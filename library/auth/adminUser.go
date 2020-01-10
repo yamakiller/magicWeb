@@ -3,8 +3,13 @@ package auth
 //ConfigAdminUserProfile doc
 //@Summary user Permission config
 //@Member []UserPerm Arrays
+type ConfigAdminUserProfileItems struct {
+	Items []ConfigAdminUserProfile `xml:"items" yaml:"items" json:"items"`
+}
+
 type ConfigAdminUserProfile struct {
-	Items []AdminUserProfile `xml:"items" yaml:"items" json:"items"`
+	Name string `xml:"name" yaml:"name" json:"name"`
+	URI  string `xml:"uri" yaml:"uri" json:"uri"`
 }
 
 //AdminUserProfileItems doc

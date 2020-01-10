@@ -2,8 +2,8 @@ package message
 
 //PageRequest page request info
 type PageRequest struct {
-	Page     int `json:"page"`
-	PageSize int `json:"pageSize"`
+	Page     int `from:"page" url:"page" json:"page"`
+	PageSize int `from:"pageSize" url:"pageSize" json:"pageSize"`
 }
 
 //PageResponse page response info

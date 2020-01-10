@@ -2,31 +2,34 @@ package captcha
 
 import (
 	"github.com/mojocn/base64Captcha"
+	"github.com/yamakiller/magicLibs/logger"
 )
 
 //GenerateCaptcha doc
 //@Method GenerateCaptcha @Summary Generate Image Captcha
 //@Param (*gin.Context)
-func GenerateCaptcha(w, h, m int) (string, string) {
+func GenerateCaptcha(w, h int) (string, string) {
 	var id string = ""
+
 	config := base64Captcha.ConfigCharacter{
-		Height:             w,
-		Width:              h,
-		Mode:               m,
+		Height:             h,
+		Width:              w,
+		Mode:               base64Captcha.CaptchaModeNumberAlphabet,
 		IsUseSimpleFont:    false,
-		ComplexOfNoiseText: 0,
-		ComplexOfNoiseDot:  0,
+		ComplexOfNoiseText: base64Captcha.CaptchaComplexLower,
+		ComplexOfNoiseDot:  base64Captcha.CaptchaComplexLower,
 		IsShowHollowLine:   false,
-		IsShowNoiseDot:     false,
-		IsShowNoiseText:    false,
+		IsShowNoiseDot:     true,
+		IsShowNoiseText:    true,
 		IsShowSlimeLine:    false,
 		IsShowSineLine:     false,
-		CaptchaLen:         0,
+		CaptchaLen:         6,
 	}
 
 	captchaID, digitCap := base64Captcha.GenerateCaptcha(id, config)
 	base64Png := base64Captcha.CaptchaWriteToBase64Encoding(digitCap)
 
+	logger.Debug(0, "Captcha Image Width:%d Height:%d", w, h)
 	return captchaID, base64Png
 }
 

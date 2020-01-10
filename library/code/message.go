@@ -9,7 +9,7 @@ import (
 //SpawnResponse doc
 //ummary create success  response
 func SpawnResponse(data interface{}) message.Response {
-	return message.Response{Code: 0, Data: data}
+	return message.Response{Code: 20000, Data: data}
 }
 
 //SpawnErrParam doc
