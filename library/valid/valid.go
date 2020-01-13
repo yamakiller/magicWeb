@@ -7,6 +7,7 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
+//V9Validator validator v9 Single case
 type V9Validator struct {
 	once     sync.Once
 	validate *validator.Validate
