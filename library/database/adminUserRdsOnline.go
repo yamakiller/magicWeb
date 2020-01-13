@@ -1,10 +1,16 @@
 package database
 
 import (
+	"errors"
 	"time"
 
 	"github.com/yamakiller/magicWeb/library/common"
 	"github.com/yamakiller/magicWeb/library/db/redis"
+)
+
+var (
+	//ErrOnlineUserEmpty user not online
+	ErrOnlineUserEmpty = errors.New("Online user empty")
 )
 
 const (
@@ -104,6 +110,11 @@ func WithRdsOnlineAdminBackstage(db int, userid string, backstate int) error {
 	return withRdsOnlineVal(db, userid, onlineUserBackstageKey, backstate)
 }
 
+//WithRdsOnlineAdminPwd Update Online User password
+func WithRdsOnlineAdminPwd(db int, userid string, pwd string) error {
+	return withRdsOnlineVal(db, userid, onlineUserPwdKey, pwd)
+}
+
 //VerifyRdsOnlineAdminAccount verfiy Online User Account is exists
 //Param  (int) db
 //Param  (string) user id
@@ -118,6 +129,8 @@ func GetRdsOnlineAdminAccount(db int, userid string) (string, error) {
 	act, err := getRdsOnlineUserVal(db, userid, onlineUserAccountKey)
 	if err != nil {
 		return "", err
+	} else if act == nil {
+		return "", ErrOnlineUserEmpty
 	}
 
 	return act.(string), nil
@@ -128,6 +141,8 @@ func GetRdsOnlineAdminPassword(db int, userid string) (string, error) {
 	pwd, err := getRdsOnlineUserVal(db, userid, onlineUserPwdKey)
 	if err != nil {
 		return "", err
+	} else if pwd == nil {
+		return "", ErrOnlineUserEmpty
 	}
 
 	return pwd.(string), nil
@@ -138,6 +153,8 @@ func GetRdsOnlineAdminSecret(db int, userid string) (string, error) {
 	secret, err := getRdsOnlineUserVal(db, userid, onlineUserSecretKey)
 	if err != nil {
 		return "", err
+	} else if secret == nil {
+		return "", ErrOnlineUserEmpty
 	}
 
 	return secret.(string), nil
@@ -148,6 +165,8 @@ func GetRdsOnlineAdminProfile(db int, userid string) (string, error) {
 	profile, err := getRdsOnlineUserVal(db, userid, onlineUserProfileKey)
 	if err != nil {
 		return "", err
+	} else if profile == nil {
+		return "", ErrOnlineUserEmpty
 	}
 
 	return profile.(string), nil
@@ -158,6 +177,8 @@ func GetRdsOnlineAdminBackstage(db int, userid string) (int, error) {
 	backstate, err := getRdsOnlineUserVal(db, userid, onlineUserBackstageKey)
 	if err != nil {
 		return 0, err
+	} else if backstate == nil {
+		return 0, ErrOnlineUserEmpty
 	}
 
 	return backstate.(int), nil
@@ -168,6 +189,8 @@ func GetRdsOnlineAdminLoginLastTime(db int, userid string) (string, error) {
 	lasttime, err := getRdsOnlineUserVal(db, userid, onlineUserLasttimeKey)
 	if err != nil {
 		return "", err
+	} else if lasttime == nil {
+		return "", ErrOnlineUserEmpty
 	}
 
 	return lasttime.(string), nil
@@ -178,6 +201,8 @@ func GetRdsOnlineAdminActived(db int, userid string) (int64, error) {
 	lasttime, err := getRdsOnlineUserVal(db, userid, onlineUserActivedKey)
 	if err != nil {
 		return 0, err
+	} else if lasttime == nil {
+		return 0, ErrOnlineUserEmpty
 	}
 
 	return lasttime.(int64), nil

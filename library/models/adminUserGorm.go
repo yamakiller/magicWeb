@@ -9,7 +9,6 @@ type AdminUser struct {
 	Password        string       `gorm:"type:varchar(64);not null;"`
 	Secret          string       `gorm:"type:varchar(16);not null;"`
 	Nick            string       `gorm:"type:varchar(16);not null;"`
-	Level           int          `gorm:"not null;"`
 	Email           string       `gorm:"type:varchar(128);not null;"`
 	Mobile          string       `gorm:"type:varchar(20);not null;"`
 	Identity        string       `gorm:"type:varchar(20);not null;"`

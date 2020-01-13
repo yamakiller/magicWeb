@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/yamakiller/magicLibs/logger"
@@ -37,10 +36,6 @@ func AdminProfileAppend(context *gin.Context,
 		logger.Error(0, "append admin profile error:%s", err.Error)
 		errResult = code.SpawnErrDbAbnormal()
 		goto fail
-	}
-
-	if err = database.AdminBehaviorAppend(sqlHandle, userID, fmt.Sprintf("增加权限组：%s", name)); err != nil {
-		logger.Error(0, "append admin profile behavior log error:%s", err.Error)
 	}
 
 	return nid, nil

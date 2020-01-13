@@ -52,3 +52,13 @@ func AdminProfileUpdate(sqlHandle string, profile *models.AdminProfile) error {
 func AdminProfileDelete(sqlHandle, id string) error {
 	return mysql.Instance().DB(sqlHandle).Where("id=?", id).Update("deleted_at", time.Now()).Error
 }
+
+//AdminProfileQueryName Returns profile group name
+func AdminProfileQueryName(sqlHandle string, id string) (string, error) {
+	profile := models.AdminProfile{}
+	if err := mysql.Instance().DB(sqlHandle).Select("name").Where("id = ?", id).First(&profile).Error; err != nil {
+		return "", err
+	}
+
+	return profile.Name, nil
+}
