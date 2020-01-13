@@ -5,7 +5,7 @@ import (
 	"github.com/yamakiller/magicWeb/library/auth"
 )
 
-//AdminProfileDelete admin user profile delete
+//AdminProfileDeployQuery admin user profile delete
 func AdminProfileDeployQuery(context *gin.Context) *auth.ConfigAdminUserProfileItems {
 	return auth.GetAdminProfileDeploy()
 }

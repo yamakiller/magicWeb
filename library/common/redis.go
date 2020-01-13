@@ -1,6 +1,6 @@
 package common
 
-//GetRdsOnlineKey doc
+//GetAdminRdsOnlineKey doc
 //Summary Returns Online User key
 //Method GetOnlineKey
 //Param (string) user id

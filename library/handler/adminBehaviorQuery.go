@@ -5,8 +5,8 @@ import (
 	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
 	"github.com/yamakiller/magicWeb/library/models"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminBehaviorQueryPage admin behaviro query
@@ -15,7 +15,7 @@ func AdminBehaviorQueryPage(context *gin.Context,
 	page,
 	pageSize int,
 	where string,
-	args ...interface{}) ([]models.AdminBehavior, int, *message.Response) {
+	args ...interface{}) ([]models.AdminBehavior, int, *protocol.Response) {
 
 	behaviors, total, err := database.AdminBehaviorQuery(sqlHandle, page, pageSize, where, args...)
 	if err != nil {

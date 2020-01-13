@@ -1,4 +1,4 @@
-package message
+package protocol
 
 //PageRequest page request info
 type PageRequest struct {

@@ -6,15 +6,15 @@ import (
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/common"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminUserSignOut admin user sign-out
 func AdminUserSignOut(context *gin.Context,
 	cacheDB int,
-	tokenSecret string) *message.Response {
+	tokenSecret string) *protocol.Response {
 
-	var errResult message.Response
+	var errResult protocol.Response
 	tokenUser, err := common.GetRequestToken(context, tokenSecret)
 	if err != nil {
 		logger.Debug(0, "authorization sign out token invalid:%s", err.Error())

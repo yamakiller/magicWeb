@@ -7,14 +7,14 @@ import (
 	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminProfileDelete admin user profile delete
 func AdminProfileDelete(context *gin.Context,
 	sqlHandle string,
 	userID string,
-	id string) *message.Response {
+	id string) *protocol.Response {
 
 	if err := database.AdminProfileDelete(sqlHandle, id); err != nil {
 		logger.Error(0, "admin profile delete error:%s", err.Error)

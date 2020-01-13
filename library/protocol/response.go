@@ -1,4 +1,4 @@
-package message
+package protocol
 
 //Response doc
 //Summary HTTP Response informat json

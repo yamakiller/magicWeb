@@ -7,13 +7,13 @@ import (
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/common"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminUserRefresh admin logined refresh token
-func AdminUserRefresh(context *gin.Context, cacheDB int, tokenSecret string, tokenExpire int) (string, *message.Response) {
+func AdminUserRefresh(context *gin.Context, cacheDB int, tokenSecret string, tokenExpire int) (string, *protocol.Response) {
 	var token string
-	var errResult message.Response
+	var errResult protocol.Response
 	tokenUser, err := common.GetRequestToken(context, tokenSecret)
 	if err != nil {
 		logger.Debug(0, "authorization refresh token invalid:%s", err.Error())

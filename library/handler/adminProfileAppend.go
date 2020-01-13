@@ -7,6 +7,7 @@ import (
 	"github.com/yamakiller/magicLibs/logger"
 
 	"github.com/yamakiller/magicWeb/library/code"
+	"github.com/yamakiller/magicWeb/library/protocol"
 
 	"github.com/yamakiller/magicWeb/library/database"
 
@@ -14,7 +15,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/yamakiller/magicWeb/library/auth"
-	"github.com/yamakiller/magicWeb/library/message"
 	"github.com/yamakiller/magicWeb/library/models"
 )
 
@@ -23,8 +23,8 @@ func AdminProfileAppend(context *gin.Context,
 	sqlHandle string,
 	userID string,
 	name string,
-	profiles *auth.AdminUserProfileItems) (string, *message.Response) {
-	var errResult message.Response
+	profiles *auth.AdminUserProfileItems) (string, *protocol.Response) {
+	var errResult protocol.Response
 
 	profile := models.AdminProfile{}
 	profile.Name = name

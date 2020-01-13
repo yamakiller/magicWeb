@@ -10,8 +10,8 @@ import (
 	"github.com/yamakiller/magicWeb/library/auth"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
 	"github.com/yamakiller/magicWeb/library/models"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminProfileUpdate admin update profile
@@ -20,8 +20,8 @@ func AdminProfileUpdate(context *gin.Context,
 	userID string,
 	id string,
 	name string,
-	profiles *auth.AdminUserProfileItems) *message.Response {
-	var errResult message.Response
+	profiles *auth.AdminUserProfileItems) *protocol.Response {
+	var errResult protocol.Response
 
 	profile := models.AdminProfile{}
 	profile.ID = id

@@ -11,8 +11,8 @@ import (
 	"github.com/yamakiller/magicWeb/library/captcha"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
 	"github.com/yamakiller/magicWeb/library/models"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminUserSignIn admin user sign-in
@@ -26,8 +26,8 @@ func AdminUserSignIn(context *gin.Context,
 	failExpire int,
 	account,
 	password,
-	captchaVal string) (*message.Response, *models.AdminUser, string) {
-	var errResult message.Response
+	captchaVal string) (*protocol.Response, *models.AdminUser, string) {
+	var errResult protocol.Response
 	var captchaID interface{}
 	var usr *models.AdminUser
 	var err error

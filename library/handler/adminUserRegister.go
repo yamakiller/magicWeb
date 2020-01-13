@@ -10,8 +10,8 @@ import (
 	"github.com/yamakiller/magicLibs/util"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
-	"github.com/yamakiller/magicWeb/library/message"
 	"github.com/yamakiller/magicWeb/library/models"
+	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
 //AdminUserRegister admin user register
@@ -23,8 +23,8 @@ func AdminUserRegister(context *gin.Context,
 	againPwd,
 	profileID,
 	Identity,
-	captchaVal string) *message.Response {
-	var errResult message.Response
+	captchaVal string) *protocol.Response {
+	var errResult protocol.Response
 	var err error
 	var is bool
 	var secret, password string
