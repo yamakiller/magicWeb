@@ -12,7 +12,7 @@ type AdminUser struct {
 	Email           string    `gorm:"type:varchar(128);not null;"`
 	Mobile          string    `gorm:"type:varchar(20);not null;"`
 	Identity        string    `gorm:"type:varchar(20);not null;"`
-	Role            string    `gorm:"type:varchar(32);index;not null;"`
+	Roles           string    `gorm:"type:varchar(256);index;not null;"`
 	Backstage       uint8     `gorm:"not null;"`
 	State           uint8     `gorm:"not null;"`
 	Source          string    `gorm:"type:varchar(64);not null;"`

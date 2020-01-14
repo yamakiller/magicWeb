@@ -12,5 +12,5 @@ func AdminUserDataUpdate(sqlHandle string, user *models.AdminUser) error {
 		Email:    user.Email,
 		Mobile:   user.Mobile,
 		Identity: user.Identity,
-		Role:     user.Role}).Error
+		Roles:    user.Roles}).Error
 }

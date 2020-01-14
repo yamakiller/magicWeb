@@ -115,7 +115,7 @@ func AdminUserSignIn(context *gin.Context,
 		usr.Account,
 		usr.Password,
 		usr.Secret,
-		usr.Role,
+		usr.Roles,
 		util.TimeNowFormat(),
 		int(usr.Backstage),
 		tokenExpire*2); err != nil {
