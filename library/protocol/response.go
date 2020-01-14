@@ -6,6 +6,7 @@ package protocol
 //Member (int) error code
 //Member (interface{}) message or data
 type Response struct {
-	Code int         `json:"code"`
-	Data interface{} `json:"data"`
+	Code 	int         `json:"code"`
+	Data 	interface{} `json:"data,omitempy"`
+	Message string      `json:"message,omitempy"`
 }
