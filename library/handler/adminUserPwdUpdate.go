@@ -37,14 +37,14 @@ func AdminUserPwdUpdate(context *gin.Context,
 
 	oldUser, err = database.AdminUserQueryPwd(sqlHandle, adminUserID)
 	if err != nil {
-		errResult = code.SpawnErrSystemMsg(err.Error)
+		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
 
 	pwd, err = util.AesEncrypt(oldUser.Secret, adminUserPwd)
 
 	if err = database.AdminUserPwdUpdate(sqlHandle, adminUserID, pwd); err != nil {
-		errResult = code.SpawnErrSystemMsg(err.Error)
+		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
 

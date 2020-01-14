@@ -36,7 +36,7 @@ func SetupAdminUserDB(sqlHandle string) error {
 	adminUser.State = 0
 	adminUser.Source = "local"
 	adminUser.Backstage = 1
-	adminUser.ProfileID = adminSuperProfileID
+	adminUser.Role = "admin"
 	adminUser.FailLastTime = time.Time{}
 	adminUser.LoginedLastTime = time.Now()
 	adminUser.LoginedIP = "localhost"

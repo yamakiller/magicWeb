@@ -15,7 +15,7 @@ func AdminUserDataUpdate(context *gin.Context,
 
 	var errResult protocol.Response
 	if err := database.AdminUserDataUpdate(sqlHandle, adminUser); err != nil {
-		errResult = code.SpawnErrSystemMsg(err.Error)
+		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
 

@@ -8,9 +8,9 @@ import (
 //AdminUserDataUpdate update admin user data
 func AdminUserDataUpdate(sqlHandle string, user *models.AdminUser) error {
 	return mysql.Instance().DB(sqlHandle).Model(user).Updates(models.AdminUser{ID: user.ID,
-		Nick:      user.Nick,
-		Email:     user.Email,
-		Mobile:    user.Mobile,
-		Identity:  user.Identity,
-		ProfileID: user.ProfileID}).Error
+		Nick:     user.Nick,
+		Email:    user.Email,
+		Mobile:   user.Mobile,
+		Identity: user.Identity,
+		Role:     user.Role}).Error
 }

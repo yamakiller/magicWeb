@@ -21,7 +21,7 @@ func AdminUserRegister(context *gin.Context,
 	account,
 	pwd,
 	againPwd,
-	profileID,
+	role,
 	Identity,
 	captchaVal string) *protocol.Response {
 	var errResult protocol.Response
@@ -88,7 +88,7 @@ func AdminUserRegister(context *gin.Context,
 	rAdminUsr.Secret = secret
 	rAdminUsr.State = 0
 	rAdminUsr.Backstage = 1
-	rAdminUsr.ProfileID = profileID
+	rAdminUsr.Role = role
 	rAdminUsr.Source = "local"
 	rAdminUsr.CreatedAt = time.Now()
 	rAdminUsr.FailLastTime = time.Time{}

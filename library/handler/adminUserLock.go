@@ -21,13 +21,13 @@ func AdminUserLock(context *gin.Context,
 
 	oldState, err := database.AdminUserQueryState(sqlHandle, adminUserID)
 	if err != nil {
-		errResult = code.SpawnErrSystemMsg(err.Error)
+		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
 
 	if _, err = database.GetRdsOnlineAdminAccount(cacheDB, adminUserID); err != nil {
 		if err != database.ErrOnlineUserEmpty {
-			errResult = code.SpawnErrSystemMsg(err.Error)
+			errResult = code.SpawnErrSystemMsg(err.Error())
 			goto fail
 		}
 	} else {
@@ -39,7 +39,7 @@ func AdminUserLock(context *gin.Context,
 	}
 
 	if err = database.AdminUserLockOper(sqlHandle, adminUserID, adminUserState); err != nil {
-		errResult = code.SpawnErrSystemMsg(err.Error)
+		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
 

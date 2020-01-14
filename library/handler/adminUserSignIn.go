@@ -26,7 +26,7 @@ func AdminUserSignIn(context *gin.Context,
 	failExpire int,
 	account,
 	password,
-	captchaVal string) (*protocol.Response, *models.AdminUser, string) {
+	captchaVal string) (*protocol.Response, string) {
 	var errResult protocol.Response
 	var captchaID interface{}
 	var usr *models.AdminUser
@@ -115,7 +115,7 @@ func AdminUserSignIn(context *gin.Context,
 		usr.Account,
 		usr.Password,
 		usr.Secret,
-		usr.Profile.Data,
+		usr.Role,
 		util.TimeNowFormat(),
 		int(usr.Backstage),
 		tokenExpire*2); err != nil {
@@ -128,7 +128,7 @@ func AdminUserSignIn(context *gin.Context,
 		logger.Error(0, "SignIn Admin Complate update state error:%s", err.Error())
 	}
 
-	return nil, usr, token
+	return nil, token
 fail:
-	return &errResult, nil, ""
+	return &errResult, ""
 }

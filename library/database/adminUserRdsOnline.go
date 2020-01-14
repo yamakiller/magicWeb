@@ -22,8 +22,8 @@ const (
 	onlineUserPwdKey = "pwd"
 	//OnlineUserSecretKey  user online redis hash user secret field name
 	onlineUserSecretKey = "secret"
-	//OnlineUserProfileKey  user online redis hash user permissions field name
-	onlineUserProfileKey = "profile"
+	//onlineUserRoleKey  user online redis hash user permissions field name
+	onlineUserRoleKey = "role"
 	//OnlineUserFeatureKey  user online redis hash user feature field name [0.nomal user 1.admin user]
 	onlineUserBackstageKey = "backstage"
 	//OnlineUserLasttime    user online redis hash user logined last time field name
@@ -44,14 +44,14 @@ const (
 //Param (int)    user online expire time /mintue
 //Return (error)
 func CreateRdsOnlineAdminUserVal(db int,
-	userid, token, username, userpwd, secret, profile, lasttime string,
+	userid, token, username, userpwd, secret, role, lasttime string,
 	backstage, expire int) error {
 	if _, err := redis.Instance().Do(db, "HMSET", common.GetAdminRdsOnlineKey(userid),
 		onlineUserTokenKey, token,
 		onlineUserAccountKey, username,
 		onlineUserPwdKey, userpwd,
 		onlineUserSecretKey, secret,
-		onlineUserProfileKey, profile,
+		onlineUserRoleKey, role,
 		onlineUserBackstageKey, backstage,
 		onlineUserLasttimeKey, lasttime,
 		onlineUserActivedKey, time.Now().UnixNano()/int64(time.Millisecond)); err != nil {
@@ -92,13 +92,13 @@ func WithRdsOnlineAdminActived(db int, userid string) error {
 	return withRdsOnlineVal(db, userid, onlineUserActivedKey, time.Now().UnixNano()/int64(time.Millisecond))
 }
 
-//WithRdsOnlineAdminProfile Update Online User profile informat
+//WithRdsOnlineAdminRole Update Online User role informat
 //Param  (int) db
 //Param  (string) user id
-//Param  (string) user profile
+//Param  (string) user role
 //Return (error)
-func WithRdsOnlineAdminProfile(db int, userid, profile string) error {
-	return withRdsOnlineVal(db, userid, onlineUserProfileKey, profile)
+func WithRdsOnlineAdminRole(db int, userid, role string) error {
+	return withRdsOnlineVal(db, userid, onlineUserRoleKey, role)
 }
 
 //WithRdsOnlineAdminBackstage Update Online User backstate state
@@ -161,15 +161,15 @@ func GetRdsOnlineAdminSecret(db int, userid string) (string, error) {
 }
 
 //GetRdsOnlineAdminProfile return Online user profile
-func GetRdsOnlineAdminProfile(db int, userid string) (string, error) {
-	profile, err := getRdsOnlineUserVal(db, userid, onlineUserProfileKey)
+func GetRdsOnlineAdminRole(db int, userid string) (string, error) {
+	role, err := getRdsOnlineUserVal(db, userid, onlineUserRoleKey)
 	if err != nil {
 		return "", err
-	} else if profile == nil {
+	} else if role == nil {
 		return "", ErrOnlineUserEmpty
 	}
 
-	return profile.(string), nil
+	return role.(string), nil
 }
 
 //GetRdsOnlineAdminBackstage return Online user backstate state
@@ -264,7 +264,7 @@ func RemoveOnlineAdminUser(db int, userid string) error {
 		onlineUserAccountKey,
 		onlineUserPwdKey,
 		onlineUserSecretKey,
-		onlineUserProfileKey,
+		onlineUserRoleKey,
 		onlineUserBackstageKey,
 		onlineUserLasttimeKey,
 		onlineUserActivedKey); err != nil {
