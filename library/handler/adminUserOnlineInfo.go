@@ -10,7 +10,7 @@ import (
 )
 
 //AdminUserOnlineInfo Return Online informat
-func AdminUserOnlineInfo(context *gin.Context, db int, tokenSecret string) (account string, role []string, res *protocol.Response) {
+func AdminUserOnlineInfo(context *gin.Context, db int, tokenSecret string) (account, avatar, lastTime string, role []string, res *protocol.Response) {
 	var errResult protocol.Response
 	var tmpRoles string
 	tokenUser, err := common.GetRequestToken(context, tokenSecret)
@@ -25,6 +25,10 @@ func AdminUserOnlineInfo(context *gin.Context, db int, tokenSecret string) (acco
 		errResult = code.SpawnErrSystemMsg(err.Error())
 		goto fail
 	}
+	lastTime, _ = database.GetRdsOnlineAdminLoginLastTime(db, tokenUser.ID)
+	avatar = "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+
+	return
 fail:
 	res = &errResult
 	return
