@@ -1,6 +1,7 @@
 package frame
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,9 @@ func (slf *DefaultWeb) Start() error {
 	//------------------------------
 	//create http router
 	slf._router = gin.Default()
+	if !slf._release {
+		slf._router.Use(slf.cors())
+	}
 	slf._router.Use(slf.logMaps())
 	if slf._start != nil {
 		if err := slf._start(slf); err != nil {
@@ -53,6 +57,25 @@ func (slf *DefaultWeb) Start() error {
 	slf._router.Run(addr)
 
 	return nil
+}
+
+func (slf *DefaultWeb) cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization, Token")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		// 处理请求
+		c.Next()
+	}
 }
 
 func (slf *DefaultWeb) logMaps() gin.HandlerFunc {
