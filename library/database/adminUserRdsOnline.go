@@ -59,7 +59,8 @@ func CreateRdsOnlineAdminUserVal(db int,
 		return err
 	}
 
-	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
+	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid),
+		time.Duration(expire)*time.Minute); err != nil {
 		RemoveOnlineAdminUser(db, userid)
 		return err
 	}
@@ -160,7 +161,7 @@ func GetRdsOnlineAdminSecret(db int, userid string) (string, error) {
 	return secret.(string), nil
 }
 
-//GetRdsOnlineAdminProfile return Online user profile
+//GetRdsOnlineAdminRole return Online user role
 func GetRdsOnlineAdminRole(db int, userid string) (string, error) {
 	role, err := getRdsOnlineUserVal(db, userid, onlineUserRoleKey)
 	if err != nil {
