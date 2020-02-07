@@ -7,7 +7,6 @@ import (
 	"github.com/yamakiller/magicLibs/args"
 	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicLibs/util"
-	"github.com/yamakiller/magicNet/core/version"
 	"github.com/yamakiller/magicWeb/frame"
 )
 
@@ -64,8 +63,7 @@ func Lanuch(spawn frame.Spawn) {
 		logger.Info(0, "  /    \\ / _` |/ _` | |/ __\\ \\/  \\/ / _ \\ '_ \\   /    \\ / _ \\ / _` | | | | |/ _ \\")
 		logger.Info(0, " / /\\/\\ \\ (_| | (_| | | (__ \\  /\\  /  __/ |_) | / /\\/\\ \\ (_) | (_| | |_| | |  __/")
 		logger.Info(0, " \\/    \\/\\__,_|\\__, |_|\\___| \\/  \\/ \\___|_.__/  \\/    \\/\\___/ \\__,_|\\__,_|_|\\___|")
-		logger.Info(0, "  ::magic net::|___/ (v%s %s %s)", version.BuildVersion, mode, version.BuildTime)
-		logger.Info(0, " ::%s %s", version.CommitID, util.TimeNowFormat())
+		logger.Info(0, "  ::magic net::|___/ (%s %s)", mode, util.TimeNowFormat())
 		logger.Info(0, "----------------------------------------------------------------------------------")
 	}
 
