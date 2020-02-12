@@ -1,0 +1,51 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "w01kP96jx5UAf+uWB8m0w8Xghas=",
+			"path": "github.com/golang/freetype",
+			"revision": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4",
+			"revisionTime": "2017-06-09T00:35:04Z"
+		},
+		{
+			"checksumSHA1": "aJ/kX/eCUlrCJBZ26Hwh/RXzAIw=",
+			"path": "github.com/golang/freetype/raster",
+			"revision": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4",
+			"revisionTime": "2017-06-09T00:35:04Z"
+		},
+		{
+			"checksumSHA1": "I3u9Uh9thka1gsgch6QEiPkaAr0=",
+			"path": "github.com/golang/freetype/truetype",
+			"revision": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4",
+			"revisionTime": "2017-06-09T00:35:04Z"
+		},
+		{
+			"path": "github.com/mojocn/base64Captcha/store",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "EVubSTsS9cdqKrBjklI5XSWHXSk=",
+			"path": "github.com/mojocn/base64captcha",
+			"revision": "488cc3127d2a2553436a90c63d90decc283680e0",
+			"revisionTime": "2019-12-03T09:30:50Z",
+			"version": "v1.2.2",
+			"versionExact": "v1.2.2"
+		},
+		{
+			"path": "golang.org/x/image/font",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/image/math/fixed",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "dIH8v3OdMGX07t3yJGMODGFUKPg=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "53403b58ad1b561927d19068c655246f2db79d48",
+			"revisionTime": "2020-01-21T17:19:40Z"
+		}
+	],
+	"rootPath": "github.com/yamakiller/magicWeb"
+}
