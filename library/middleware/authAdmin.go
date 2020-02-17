@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/common"
 	"github.com/yamakiller/magicWeb/library/database"
+	"github.com/yamakiller/magicWeb/library/log"
 )
 
 //AuthAdmin Verify if you are a background administrator
@@ -22,19 +22,19 @@ func AuthAdmin(context *gin.Context, db int, tokenSecret string, release bool) {
 	tokenUser, err := common.GetRequestToken(context, tokenSecret)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrTokenInvalid())
-		logger.Debug(0, "authorization admin token invalid:%+v", err)
+		log.Debug("authorization admin token invalid:%+v", err)
 		return
 	}
 	backstage, err := database.GetRdsOnlineAdminBackstage(db, tokenUser.ID)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
-		logger.Debug(0, "authorization admin get backstate error:%+v", err)
+		log.Debug("authorization admin get backstate error:%+v", err)
 		return
 	}
 
 	if backstage < 1 {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
-		logger.Debug(0, "authorization admin get backstate %d", backstage)
+		log.Debug("authorization admin get backstate %d", backstage)
 		return
 	}
 

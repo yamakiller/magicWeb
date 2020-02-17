@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/yamakiller/magicLibs/args"
 	"github.com/yamakiller/magicLibs/envs"
-	"github.com/yamakiller/magicLibs/logger"
+	"github.com/yamakiller/magicWeb/library/log"
 )
 
 //DefaultWeb doc
@@ -51,7 +51,7 @@ func (slf *DefaultWeb) Start() error {
 	//------------------------
 	addr := args.Instance().GetString("-addr", "0.0.0.0:8080")
 	if slf._release {
-		logger.Info(0, "HTTP on %s", addr)
+		log.Info("HTTP on %s", addr)
 	}
 
 	slf._router.Run(addr)
@@ -89,7 +89,7 @@ func (slf *DefaultWeb) logMaps() gin.HandlerFunc {
 			reqURI := c.Request.RequestURI
 			statusCode := c.Writer.Status()
 			clientIP := c.ClientIP()
-			logger.Info(0, "%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
+			log.Info("%s %s %3d =>client:%15s time:%13v", reqURI, reqMethod, statusCode, clientIP, latencyTime)
 		}
 	}
 }

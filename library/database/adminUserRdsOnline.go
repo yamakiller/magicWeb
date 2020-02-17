@@ -44,8 +44,15 @@ const (
 //Param (int)    user online expire time /mintue
 //Return (error)
 func CreateRdsOnlineAdminUserVal(db int,
-	userid, token, username, userpwd, secret, role, lasttime string,
-	backstage, expire int) error {
+	userid,
+	token,
+	username,
+	userpwd,
+	secret,
+	role,
+	lasttime string,
+	backstage,
+	expireSec int) error {
 	if _, err := redis.Instance().Do(db, "HMSET", common.GetAdminRdsOnlineKey(userid),
 		onlineUserTokenKey, token,
 		onlineUserAccountKey, username,
@@ -60,7 +67,7 @@ func CreateRdsOnlineAdminUserVal(db int,
 	}
 
 	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid),
-		time.Duration(expire)*time.Minute); err != nil {
+		expireSec); err != nil {
 		RemoveOnlineAdminUser(db, userid)
 		return err
 	}
@@ -73,13 +80,13 @@ func CreateRdsOnlineAdminUserVal(db int,
 //Param  (string) user id
 //Param  (string) user token
 //Return (error)
-func WithRdsOnlineAdminToken(db int, userid, token string, expire int) error {
+func WithRdsOnlineAdminToken(db int, userid, token string, expireSec int) error {
 	if err := withRdsOnlineVal(db, userid, onlineUserTokenKey, token); err != nil {
 		return err
 	}
 
-	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
-		RemoveOnlineAdminUser(db, userid)
+	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expireSec); err != nil {
+		//RemoveOnlineAdminUser(db, userid)
 		return err
 	}
 	return nil
@@ -240,8 +247,9 @@ func getRdsOnlineUserVal(db int, userid, key string) (interface{}, error) {
 //Summary Update Online user data expire
 //Param (string) user id
 //Param  (int) expire second
-func WithRdsOnlineAdminExpire(db int, userid string, expire int) error {
-	if _, err := redis.Instance().Do(db, "expire", common.GetAdminRdsOnlineKey(userid), expire); err != nil {
+func WithRdsOnlineAdminExpire(db int, userid string, expireSec int) error {
+	if _, err := redis.Instance().Do(db, "expire",
+		common.GetAdminRdsOnlineKey(userid), expireSec); err != nil {
 		return err
 	}
 

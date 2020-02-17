@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/yamakiller/magicLibs/encryption/aes"
 	"github.com/yamakiller/magicLibs/util"
 	"github.com/yamakiller/magicWeb/library/db/mysql"
 	"github.com/yamakiller/magicWeb/library/models"
@@ -13,7 +14,8 @@ import (
 //SetupAdminUserDB setup admin user db
 func SetupAdminUserDB(sqlHandle string) error {
 	mysql.Instance().DB(sqlHandle).DropTableIfExists(&models.AdminUser{})
-	err := mysql.Instance().DB(config.SQLUHandle).Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8").
+	err := mysql.Instance().DB(config.SQLUHandle).
+		Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8").
 		CreateTable(&models.AdminUser{}).Error
 	if err != nil {
 		return err
@@ -24,7 +26,7 @@ func SetupAdminUserDB(sqlHandle string) error {
 
 	pwd := "admin"
 	secret := util.RandStr(16)
-	password, e := util.AesEncrypt(secret, pwd)
+	password, e := aes.Encrypt(secret, pwd)
 	if e != nil {
 		return fmt.Errorf("install admin user password encrypt error:%+v", e)
 	}

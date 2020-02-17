@@ -2,7 +2,7 @@ package captcha
 
 import (
 	"github.com/mojocn/base64Captcha"
-	"github.com/yamakiller/magicLibs/logger"
+	"github.com/yamakiller/magicWeb/library/log"
 )
 
 //GenerateCaptcha doc
@@ -29,7 +29,7 @@ func GenerateCaptcha(w, h int) (string, string) {
 	captchaID, digitCap := base64Captcha.GenerateCaptcha(id, config)
 	base64Png := base64Captcha.CaptchaWriteToBase64Encoding(digitCap)
 
-	logger.Debug(0, "Captcha Image Width:%d Height:%d", w, h)
+	log.Debug("Captcha Image Width:%d Height:%d", w, h)
 	return captchaID, base64Png
 }
 

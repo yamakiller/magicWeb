@@ -6,10 +6,11 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
-	"github.com/yamakiller/magicLibs/logger"
+	"github.com/yamakiller/magicLibs/encryption/aes"
 	"github.com/yamakiller/magicLibs/util"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
+	"github.com/yamakiller/magicWeb/library/log"
 	"github.com/yamakiller/magicWeb/library/models"
 	"github.com/yamakiller/magicWeb/library/protocol"
 )
@@ -32,32 +33,32 @@ func AdminUserRegister(context *gin.Context,
 	var captchaID interface{}
 
 	if !util.VerifyCaptchaFormat(captchaVal) {
-		logger.Debug(0, "Regiser account captcha format error:%s", captchaVal)
+		log.Debug("Regiser account captcha format error:%s", captchaVal)
 		errResult = code.SpawnErrCaptchaFormat("must consist of eight characters")
 		goto fail
 	}
 
 	if !util.VerifyAccountFormat(account) {
-		logger.Debug(0, "Register account format error:%s", account)
+		log.Debug("Register account format error:%s", account)
 		errResult = code.SpawnErrUserNameFormat()
 		goto fail
 	}
 
 	if !util.VerifyPasswordFormat(pwd) {
-		logger.Debug(0, "Register password format error:%s", pwd)
+		log.Debug("Register password format error:%s", pwd)
 		errResult = code.SpawnErrPwdFormat()
 		goto fail
 	}
 
 	if pwd != againPwd {
-		logger.Debug(0, "Register password first!=second")
+		log.Debug("Register password first!=second")
 		errResult = code.SpawnErrPwdAgin()
 		goto fail
 	}
 
 	captchaID = sessions.Default(context).Get(captchaKey)
 	if captchaID == nil || captchaID == "" {
-		logger.Error(0, "SignIn Admin Captcha not Generate")
+		log.Error("SignIn Admin Captcha not Generate")
 		errResult = code.SpawnErrNeedGenerateCaptcha()
 		goto fail
 	}
@@ -67,15 +68,15 @@ func AdminUserRegister(context *gin.Context,
 			errResult = code.SpawnErrUserExitis()
 			goto fail
 		}
-		logger.Debug(0, "Register account error:%s", err.Error)
+		log.Debug("Register account error:%s", err.Error)
 		errResult = code.SpawnErrDbAbnormal()
 		goto fail
 	}
 
 	secret = util.RandStr(16)
-	password, err = util.AesEncrypt(secret, pwd)
+	password, err = aes.Encrypt(secret, pwd)
 	if err != nil {
-		logger.Error(0, "Register password encrypt error:%s", err.Error)
+		log.Error("Register password encrypt error:%s", err.Error)
 		errResult = code.SpawnErrSystem()
 		goto fail
 	}
@@ -97,7 +98,7 @@ func AdminUserRegister(context *gin.Context,
 	rAdminUsr.CreateIP = rAdminUsr.LoginedIP
 
 	if err := database.CreateAdminAccount(sqlHandle, &rAdminUsr); err != nil {
-		logger.Error(0, "Register database error:%s", err.Error)
+		log.Error("Register database error:%s", err.Error)
 		errResult = code.SpawnErrDbAbnormal()
 		goto fail
 	}

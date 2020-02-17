@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/common"
+	"github.com/yamakiller/magicWeb/library/log"
 )
 
 //AuthAdminAccess Verify that you have access
@@ -20,7 +20,7 @@ func AuthAdminAccess(context *gin.Context, db int, tokenSecret string, needs []s
 	roles, err := GetRequestTokenRole(context, db, tokenSecret)
 	if err != nil {
 		common.ResponseError(context, code.SpawnErrNeedPerm())
-		logger.Debug(0, "authorization role access error:%+v", err)
+		log.Debug("authorization role access error:%+v", err)
 		return
 	}
 
@@ -33,7 +33,8 @@ func AuthAdminAccess(context *gin.Context, db int, tokenSecret string, needs []s
 	}
 
 	common.ResponseError(context, code.SpawnErrNeedPerm())
-	logger.Debug(0, "authorization profile access %s need access", context.Request.RequestURI)
+	log.Debug("authorization profile access %s need access",
+		context.Request.RequestURI)
 	return
 next:
 	context.Next()

@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/yamakiller/magicLibs/logger"
 	"github.com/yamakiller/magicWeb/library/code"
 	"github.com/yamakiller/magicWeb/library/database"
+	"github.com/yamakiller/magicWeb/library/log"
 	"github.com/yamakiller/magicWeb/library/protocol"
 )
 
@@ -45,7 +45,7 @@ func AdminUserLock(context *gin.Context,
 
 	if isOnline && newState != 0 {
 		if err != database.RemoveOnlineAdminUser(cacheDB, adminUserID) {
-			logger.Debug(0, "remove online admn error:%s", err.Error())
+			log.Debug("remove online admn error:%s", err.Error())
 		}
 	}
 
