@@ -124,7 +124,7 @@ func AdminUserSignIn(context *gin.Context,
 		usr.Password,
 		usr.Secret,
 		usr.Roles,
-		util.TimeNowFormat(),
+		util.TimestampFormat(),
 		int(usr.Backstage),
 		tokenExpireMinute*60*2); err != nil {
 		log.Error("SignIn Admin auth redis error:%s", err.Error())
